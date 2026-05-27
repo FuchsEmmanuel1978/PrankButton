@@ -65,6 +65,14 @@ string theme_work_no
 string theme_work_question
 string theme_work_title
 string theme_work_yes
+string tutorial_skip
+string tutorial_start
+string tutorial_step_0
+string tutorial_step_1
+string tutorial_step_2
+string tutorial_step_3
+string tutorial_step_4
+string tutorial_title
 string whatsapp_not_installed
 style AppTheme
 style Theme.MissionCupidon

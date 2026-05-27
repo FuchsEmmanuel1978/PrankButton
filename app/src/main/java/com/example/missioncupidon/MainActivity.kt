@@ -1,6 +1,7 @@
 package com.example.missioncupidon
 
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -83,7 +84,11 @@ class MainActivity : ComponentActivity() {
         setContentView(splashImage)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            showThemeSelection()
+            if (shouldShowTutorial()) {
+                showTutorialScreen()
+            } else {
+                showThemeSelection()
+            }
         }, 1800)
     }
 
@@ -208,6 +213,113 @@ class MainActivity : ComponentActivity() {
             "📧"
         )
     )
+
+
+    private fun shouldShowTutorial(): Boolean {
+        val prefs = getSharedPreferences("prank_button_prefs", Context.MODE_PRIVATE)
+        return prefs.getBoolean("show_tutorial_first_launch", true)
+    }
+
+    private fun markTutorialAsSeen() {
+        val prefs = getSharedPreferences("prank_button_prefs", Context.MODE_PRIVATE)
+        prefs.edit().putBoolean("show_tutorial_first_launch", false).apply()
+    }
+
+    private fun showTutorialScreen() {
+        val scrollView = ScrollView(this)
+        scrollView.background = gradientDrawable("#FF5F9E", "#7C3AED")
+
+        val layout = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER_HORIZONTAL
+            setPadding(dp(22), dp(42), dp(22), dp(28))
+        }
+
+        val card = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER_HORIZONTAL
+            background = cardDrawable()
+            setPadding(dp(22), dp(28), dp(22), dp(24))
+        }
+
+        val emoji = TextView(this).apply {
+            text = "😄"
+            textSize = 58f
+            gravity = Gravity.CENTER
+            setPadding(0, 0, 0, dp(8))
+        }
+
+        val title = TextView(this).apply {
+            text = getString(R.string.tutorial_title)
+            textSize = 28f
+            setTextColor(Color.WHITE)
+            typeface = Typeface.DEFAULT_BOLD
+            gravity = Gravity.CENTER
+            setPadding(0, 0, 0, dp(18))
+        }
+
+        val steps = listOf(
+            getString(R.string.tutorial_step_0),
+            getString(R.string.tutorial_step_1),
+            getString(R.string.tutorial_step_2),
+            getString(R.string.tutorial_step_3),
+            getString(R.string.tutorial_step_4)
+        )
+
+        val stepsBox = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            background = tutorialBoxDrawable()
+            setPadding(dp(16), dp(16), dp(16), dp(16))
+        }
+
+        steps.forEach { step ->
+            val stepView = TextView(this).apply {
+                text = step
+                textSize = 18f
+                setTextColor(Color.WHITE)
+                typeface = Typeface.DEFAULT_BOLD
+                setPadding(0, dp(8), 0, dp(8))
+            }
+            stepsBox.addView(stepView)
+        }
+
+        val startButton = Button(this).apply {
+            text = getString(R.string.tutorial_start)
+            textSize = 19f
+            setTextColor(Color.WHITE)
+            typeface = Typeface.DEFAULT_BOLD
+            background = roundedButtonDrawable("#16A34A")
+            isAllCaps = false
+            setPadding(dp(16), dp(16), dp(16), dp(16))
+            setOnClickListener {
+                markTutorialAsSeen()
+                showThemeSelection()
+            }
+        }
+
+        val skipButton = Button(this).apply {
+            text = getString(R.string.tutorial_skip)
+            textSize = 15f
+            setTextColor(Color.WHITE)
+            background = roundedButtonDrawable("#374151")
+            isAllCaps = false
+            setPadding(dp(14), dp(12), dp(14), dp(12))
+            setOnClickListener {
+                markTutorialAsSeen()
+                showThemeSelection()
+            }
+        }
+
+        card.addView(emoji)
+        card.addView(title)
+        card.addView(stepsBox, matchWrapWithBottomMargin(dp(20)))
+        card.addView(startButton, matchWrapWithBottomMargin(dp(12)))
+        card.addView(skipButton)
+
+        layout.addView(card)
+        scrollView.addView(layout)
+        setContentView(scrollView)
+    }
 
     private fun showThemeSelection() {
         selectedImageUri = null
@@ -862,6 +974,16 @@ class MainActivity : ComponentActivity() {
             cornerRadius = dp(18).toFloat()
             setColor(Color.parseColor("#FFFFFFFF"))
             setStroke(dp(1), Color.parseColor("#E5E7EB"))
+        }
+    }
+
+
+    private fun tutorialBoxDrawable(): GradientDrawable {
+        return GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = dp(22).toFloat()
+            setColor(Color.parseColor("#33FFFFFF"))
+            setStroke(dp(1), Color.parseColor("#66FFFFFF"))
         }
     }
 

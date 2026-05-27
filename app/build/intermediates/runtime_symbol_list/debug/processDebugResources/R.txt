@@ -315,7 +315,15 @@ int string theme_work_no 0x7f090051
 int string theme_work_question 0x7f090052
 int string theme_work_title 0x7f090053
 int string theme_work_yes 0x7f090054
-int string whatsapp_not_installed 0x7f090055
+int string tutorial_skip 0x7f090055
+int string tutorial_start 0x7f090056
+int string tutorial_step_0 0x7f090057
+int string tutorial_step_1 0x7f090058
+int string tutorial_step_2 0x7f090059
+int string tutorial_step_3 0x7f09005a
+int string tutorial_step_4 0x7f09005b
+int string tutorial_title 0x7f09005c
+int string whatsapp_not_installed 0x7f09005d
 int style AppTheme 0x7f0a0000
 int style TextAppearance_Compat_Notification 0x7f0a0001
 int style TextAppearance_Compat_Notification_Info 0x7f0a0002

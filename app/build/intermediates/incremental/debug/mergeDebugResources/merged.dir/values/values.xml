@@ -207,6 +207,14 @@
     <string name="theme_work_question">Est-ce que cette réunion aurait pu être un email ?</string>
     <string name="theme_work_title">Question professionnelle 💼</string>
     <string name="theme_work_yes">Oui 📧</string>
+    <string name="tutorial_skip">Passer</string>
+    <string name="tutorial_start">C’est parti 🚀</string>
+    <string name="tutorial_step_0">0) Choisis ton thème de prank</string>
+    <string name="tutorial_step_1">1) Modifie les textes</string>
+    <string name="tutorial_step_2">2) Crée-le avec une photo</string>
+    <string name="tutorial_step_3">3) Envoie-le à tes amis</string>
+    <string name="tutorial_step_4">4) Rigole bien ! 😂</string>
+    <string name="tutorial_title">Comment ça marche ? 😄</string>
     <string name="whatsapp_not_installed">WhatsApp n\'est pas installé 😢</string>
     <style name="AppTheme" parent="android:style/Theme.Material.Light.NoActionBar">
         <item name="android:fontFamily">sans</item>
