@@ -14,13 +14,7 @@ import android.util.Base64
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.ScrollView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.ComponentActivity
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -59,7 +53,12 @@ class MainActivity : ComponentActivity() {
         val finalMessage: String,
         val colorStart: String,
         val colorEnd: String,
-        val accentColor: String
+        val accentColor: String,
+        val pageStartColor: String,
+        val pageEndColor: String,
+        val pageAccentColor: String,
+        val fallingSymbols: List<String>,
+        val finalEmoji: String
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,93 +69,6 @@ class MainActivity : ComponentActivity() {
 
         showSplashScreen()
     }
-
-    private fun getThemes(): List<PrankTheme> = listOf(
-        PrankTheme(
-            getString(R.string.theme_love_name),
-            "❤️",
-            getString(R.string.theme_love_title),
-            getString(R.string.theme_love_question),
-            getString(R.string.theme_love_yes),
-            getString(R.string.theme_love_no),
-            getString(R.string.theme_love_final),
-            "#FF5F9E",
-            "#A855F7",
-            "#FF3D81"
-        ),
-        PrankTheme(
-            getString(R.string.theme_drinks_name),
-            "🍻",
-            getString(R.string.theme_drinks_title),
-            getString(R.string.theme_drinks_question),
-            getString(R.string.theme_drinks_yes),
-            getString(R.string.theme_drinks_no),
-            getString(R.string.theme_drinks_final),
-            "#F59E0B",
-            "#EF4444",
-            "#D97706"
-        ),
-        PrankTheme(
-            getString(R.string.theme_fan_name),
-            "⚽",
-            getString(R.string.theme_fan_title),
-            getString(R.string.theme_fan_question),
-            getString(R.string.theme_fan_yes),
-            getString(R.string.theme_fan_no),
-            getString(R.string.theme_fan_final),
-            "#0EA5E9",
-            "#22C55E",
-            "#0284C7"
-        ),
-        PrankTheme(
-            getString(R.string.theme_family_name),
-            "👨‍👩‍👧‍👦",
-            getString(R.string.theme_family_title),
-            getString(R.string.theme_family_question),
-            getString(R.string.theme_family_yes),
-            getString(R.string.theme_family_no),
-            getString(R.string.theme_family_final),
-            "#FB7185",
-            "#FDBA74",
-            "#F43F5E"
-        ),
-        PrankTheme(
-            getString(R.string.theme_friends_name),
-            "😎",
-            getString(R.string.theme_friends_title),
-            getString(R.string.theme_friends_question),
-            getString(R.string.theme_friends_yes),
-            getString(R.string.theme_friends_no),
-            getString(R.string.theme_friends_final),
-            "#8B5CF6",
-            "#3B82F6",
-            "#7C3AED"
-        ),
-        PrankTheme(
-            getString(R.string.theme_birthday_name),
-            "🎂",
-            getString(R.string.theme_birthday_title),
-            getString(R.string.theme_birthday_question),
-            getString(R.string.theme_birthday_yes),
-            getString(R.string.theme_birthday_no),
-            getString(R.string.theme_birthday_final),
-            "#EC4899",
-            "#F97316",
-            "#DB2777"
-        ),
-        PrankTheme(
-            getString(R.string.theme_work_name),
-            "💼",
-            getString(R.string.theme_work_title),
-            getString(R.string.theme_work_question),
-            getString(R.string.theme_work_yes),
-            getString(R.string.theme_work_no),
-            getString(R.string.theme_work_final),
-            "#64748B",
-            "#0EA5E9",
-            "#475569"
-        )
-    )
 
     private fun showSplashScreen() {
         val splashImage = ImageView(this).apply {
@@ -174,6 +86,128 @@ class MainActivity : ComponentActivity() {
             showThemeSelection()
         }, 1800)
     }
+
+    private fun getThemes(): List<PrankTheme> = listOf(
+        PrankTheme(
+            getString(R.string.theme_love_name),
+            "❤️",
+            getString(R.string.theme_love_title),
+            getString(R.string.theme_love_question),
+            getString(R.string.theme_love_yes),
+            getString(R.string.theme_love_no),
+            getString(R.string.theme_love_final),
+            "#FF5F9E",
+            "#A855F7",
+            "#FF3D81",
+            "#ff5f9e",
+            "#a855f7",
+            "#ff3d81",
+            listOf("❤️", "💖", "💕", "💘"),
+            "💖"
+        ),
+        PrankTheme(
+            getString(R.string.theme_drinks_name),
+            "🍻",
+            getString(R.string.theme_drinks_title),
+            getString(R.string.theme_drinks_question),
+            getString(R.string.theme_drinks_yes),
+            getString(R.string.theme_drinks_no),
+            getString(R.string.theme_drinks_final),
+            "#F59E0B",
+            "#EF4444",
+            "#D97706",
+            "#f59e0b",
+            "#ef4444",
+            "#d97706",
+            listOf("🍻", "🍾", "🥨", "🫒", "🍹"),
+            "🍻"
+        ),
+        PrankTheme(
+            getString(R.string.theme_fan_name),
+            "⚽",
+            getString(R.string.theme_fan_title),
+            getString(R.string.theme_fan_question),
+            getString(R.string.theme_fan_yes),
+            getString(R.string.theme_fan_no),
+            getString(R.string.theme_fan_final),
+            "#0EA5E9",
+            "#22C55E",
+            "#0284C7",
+            "#0ea5e9",
+            "#22c55e",
+            "#0284c7",
+            listOf("⚽", "🏆", "🔥", "📣", "🥅"),
+            "🏆"
+        ),
+        PrankTheme(
+            getString(R.string.theme_family_name),
+            "👨‍👩‍👧‍👦",
+            getString(R.string.theme_family_title),
+            getString(R.string.theme_family_question),
+            getString(R.string.theme_family_yes),
+            getString(R.string.theme_family_no),
+            getString(R.string.theme_family_final),
+            "#FB7185",
+            "#FDBA74",
+            "#F43F5E",
+            "#fb7185",
+            "#fdba74",
+            "#f43f5e",
+            listOf("🏠", "😂", "💛", "⭐", "🍪"),
+            "🏠"
+        ),
+        PrankTheme(
+            getString(R.string.theme_friends_name),
+            "😎",
+            getString(R.string.theme_friends_title),
+            getString(R.string.theme_friends_question),
+            getString(R.string.theme_friends_yes),
+            getString(R.string.theme_friends_no),
+            getString(R.string.theme_friends_final),
+            "#8B5CF6",
+            "#3B82F6",
+            "#7C3AED",
+            "#8b5cf6",
+            "#3b82f6",
+            "#7c3aed",
+            listOf("😎", "😂", "🔥", "🎮", "🤜"),
+            "😎"
+        ),
+        PrankTheme(
+            getString(R.string.theme_birthday_name),
+            "🎂",
+            getString(R.string.theme_birthday_title),
+            getString(R.string.theme_birthday_question),
+            getString(R.string.theme_birthday_yes),
+            getString(R.string.theme_birthday_no),
+            getString(R.string.theme_birthday_final),
+            "#EC4899",
+            "#F97316",
+            "#DB2777",
+            "#ec4899",
+            "#f97316",
+            "#db2777",
+            listOf("🎂", "🎉", "🎁", "🥳", "✨"),
+            "🎉"
+        ),
+        PrankTheme(
+            getString(R.string.theme_work_name),
+            "💼",
+            getString(R.string.theme_work_title),
+            getString(R.string.theme_work_question),
+            getString(R.string.theme_work_yes),
+            getString(R.string.theme_work_no),
+            getString(R.string.theme_work_final),
+            "#64748B",
+            "#0EA5E9",
+            "#475569",
+            "#64748b",
+            "#0ea5e9",
+            "#475569",
+            listOf("📧", "💼", "☕", "📎", "🗓️"),
+            "📧"
+        )
+    )
 
     private fun showThemeSelection() {
         selectedImageUri = null
@@ -221,6 +255,7 @@ class MainActivity : ComponentActivity() {
                 typeface = Typeface.DEFAULT_BOLD
                 background = roundedButtonDrawable(theme.accentColor)
                 setPadding(dp(18), dp(16), dp(18), dp(16))
+                isAllCaps = false
                 setOnClickListener {
                     showCreationScreen(theme)
                 }
@@ -260,6 +295,7 @@ class MainActivity : ComponentActivity() {
             setTextColor(Color.WHITE)
             textSize = 16f
             background = roundedButtonDrawable("#374151")
+            isAllCaps = false
             setOnClickListener {
                 showThemeSelection()
             }
@@ -313,6 +349,7 @@ class MainActivity : ComponentActivity() {
             typeface = Typeface.DEFAULT_BOLD
             background = roundedButtonDrawable(theme.accentColor)
             setPadding(dp(16), dp(14), dp(16), dp(14))
+            isAllCaps = false
             setOnClickListener {
                 pickImageLauncher.launch(
                     PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
@@ -327,6 +364,7 @@ class MainActivity : ComponentActivity() {
             typeface = Typeface.DEFAULT_BOLD
             background = roundedButtonDrawable("#16A34A")
             setPadding(dp(18), dp(16), dp(18), dp(16))
+            isAllCaps = false
             setOnClickListener {
                 val title = titleInput.text.toString().ifBlank { theme.title }
                 val question = questionInput.text.toString().ifBlank { theme.question }
@@ -335,6 +373,7 @@ class MainActivity : ComponentActivity() {
                 val finalMessage = finalMessageInput.text.toString().ifBlank { theme.finalMessage }
 
                 createAndShareHtml(
+                    theme = theme,
                     title = title,
                     question = question,
                     yesText = yesText,
@@ -372,6 +411,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun createAndShareHtml(
+        theme: PrankTheme,
         title: String,
         question: String,
         yesText: String,
@@ -386,6 +426,7 @@ class MainActivity : ComponentActivity() {
 
             val imageBase64 = convertImageToBase64(selectedImageUri!!)
             val html = generateHtml(
+                theme = theme,
                 title = title,
                 question = question,
                 yesText = yesText,
@@ -436,6 +477,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun generateHtml(
+        theme: PrankTheme,
         title: String,
         question: String,
         yesText: String,
@@ -448,15 +490,26 @@ class MainActivity : ComponentActivity() {
         val safeYesText = escapeHtml(yesText)
         val safeNoText = escapeHtml(noText)
         val safeFinalMessage = escapeHtml(finalMessage)
-        val htmlLang = Locale.getDefault().language.ifBlank { "en" }
+        val safeThemeName = escapeHtml(theme.name)
+        val htmlLanguage = Locale.getDefault().language.ifBlank { "fr" }
+
+        val symbolsJsArray = theme.fallingSymbols.joinToString(
+            prefix = "[",
+            postfix = "]"
+        ) { "\"${escapeJs(it)}\"" }
+
+        val primary = theme.pageAccentColor
+        val start = theme.pageStartColor
+        val end = theme.pageEndColor
+        val finalEmoji = escapeHtml(theme.finalEmoji)
 
         return """
 <!DOCTYPE html>
-<html lang="$htmlLang">
+<html lang="$htmlLanguage">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>${getString(R.string.app_name)}</title>
+  <title>Prank Button 😄</title>
   <style>
     * { box-sizing: border-box; }
 
@@ -467,17 +520,17 @@ class MainActivity : ComponentActivity() {
       align-items: center;
       justify-content: center;
       font-family: "Segoe UI", Arial, sans-serif;
-      background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+      background: linear-gradient(135deg, $start, $end);
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
       overflow: hidden;
-      transition: background-image 0.8s ease;
+      transition: background-image 0.8s ease, background 0.8s ease;
     }
 
     body.photo-active {
       background-image:
-        linear-gradient(rgba(255, 180, 210, 0.12), rgba(120, 20, 70, 0.12)),
+        linear-gradient(rgba(0, 0, 0, 0.10), rgba(0, 0, 0, 0.32)),
         url("data:image/jpeg;base64,$imageBase64");
     }
 
@@ -485,36 +538,53 @@ class MainActivity : ComponentActivity() {
       content: "";
       position: fixed;
       inset: 0;
-      background: rgba(255, 120, 170, 0.18);
+      background: linear-gradient(135deg, rgba(255,255,255,0.10), rgba(0,0,0,0.18));
       backdrop-filter: blur(1px);
       z-index: 0;
       pointer-events: none;
     }
 
     .card {
-      width: min(92vw, 520px);
-      padding: 36px 26px;
+      width: min(92vw, 540px);
+      padding: 34px 24px;
       text-align: center;
-      background: rgba(255, 255, 255, 0.88);
-      border-radius: 28px;
-      box-shadow: 0 20px 60px rgba(120, 30, 70, 0.25);
+      background: rgba(255, 255, 255, 0.90);
+      border: 1px solid rgba(255,255,255,0.8);
+      border-radius: 30px;
+      box-shadow: 0 22px 70px rgba(0, 0, 0, 0.26);
       position: relative;
       z-index: 2;
+      overflow: hidden;
+    }
+
+    .theme-pill {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, $start, $end);
+      color: white;
+      font-weight: 800;
+      margin-bottom: 14px;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.18);
     }
 
     .card.photo-reveal {
       background: transparent;
       box-shadow: none;
+      border: none;
       pointer-events: none;
     }
 
-    .card.photo-reveal .buttons { display: none; }
+    .card.photo-reveal .buttons,
+    .card.photo-reveal .theme-pill {
+      display: none;
+    }
 
     .card.photo-reveal h1,
     .card.photo-reveal p,
     .card.photo-reveal .message {
       display: block;
-      text-shadow: 0 3px 12px rgba(0, 0, 0, 0.55);
+      text-shadow: 0 4px 16px rgba(0, 0, 0, 0.72);
     }
 
     .card.photo-reveal h1,
@@ -524,25 +594,26 @@ class MainActivity : ComponentActivity() {
 
     h1 {
       margin: 0 0 14px;
-      color: #d6336c;
+      color: $primary;
       font-size: clamp(2rem, 7vw, 3.2rem);
       line-height: 1.1;
     }
 
     p {
       margin: 0 0 30px;
-      color: #633044;
+      color: #374151;
       font-size: clamp(1.1rem, 4vw, 1.35rem);
+      font-weight: 650;
     }
 
     .buttons {
       position: relative;
-      min-height: 140px;
+      min-height: 155px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 22px;
-      padding: 0 42px;
+      padding: 0 38px;
     }
 
     button {
@@ -550,14 +621,14 @@ class MainActivity : ComponentActivity() {
       border-radius: 999px;
       padding: 16px 32px;
       font-size: 1.25rem;
-      font-weight: 700;
+      font-weight: 900;
       cursor: pointer;
       transition: transform 0.22s ease, box-shadow 0.22s ease, left 0.22s ease, top 0.22s ease;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.16);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
     }
 
     #yesBtn {
-      background: #ff4d88;
+      background: linear-gradient(135deg, $start, $primary);
       color: white;
       transform: scale(1);
       z-index: 3;
@@ -566,10 +637,10 @@ class MainActivity : ComponentActivity() {
 
     #noBtn {
       background: white;
-      color: #d6336c;
-      border: 2px solid #ff9fbd;
+      color: $primary;
+      border: 3px solid $primary;
       position: absolute;
-      right: 42px;
+      right: 38px;
       top: 50%;
       transform: translateY(-50%);
       z-index: 4;
@@ -579,33 +650,49 @@ class MainActivity : ComponentActivity() {
       display: none;
       margin-top: 24px;
       padding: 18px;
-      border-radius: 18px;
+      border-radius: 20px;
       background: rgba(255, 255, 255, 0.22);
       color: white;
-      backdrop-filter: blur(2px);
-      font-size: 1.25rem;
-      font-weight: 700;
+      backdrop-filter: blur(3px);
+      font-size: 1.28rem;
+      font-weight: 900;
     }
 
-    .heart {
+    .falling-symbol {
       position: fixed;
-      top: -30px;
-      color: rgba(255, 255, 255, 0.75);
+      top: -40px;
+      color: rgba(255, 255, 255, 0.82);
       font-size: 28px;
       animation: fall linear infinite;
       z-index: 1;
+      pointer-events: none;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.18));
+    }
+
+    .flash {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle, rgba(255,255,255,0.65), transparent 60%);
+      z-index: 1;
+      animation: flashOut 900ms ease forwards;
       pointer-events: none;
     }
 
     @keyframes fall {
       to {
-        transform: translateY(110vh) rotate(360deg);
+        transform: translateY(112vh) rotate(360deg);
       }
+    }
+
+    @keyframes flashOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
     }
   </style>
 </head>
 <body>
   <main class="card">
+    <div class="theme-pill">$finalEmoji $safeThemeName</div>
     <h1>$safeTitle</h1>
     <p>$safeQuestion</p>
 
@@ -624,6 +711,7 @@ class MainActivity : ComponentActivity() {
     const yesBtn = document.getElementById("yesBtn");
     const message = document.getElementById("message");
     const buttonsBox = document.getElementById("buttonsBox");
+    const symbols = $symbolsJsArray;
 
     let yesScale = 1;
 
@@ -680,21 +768,31 @@ class MainActivity : ComponentActivity() {
       document.body.classList.add("photo-active");
       message.style.display = "block";
       document.querySelector(".card").classList.add("photo-reveal");
+
+      const flash = document.createElement("div");
+      flash.className = "flash";
+      document.body.appendChild(flash);
+      setTimeout(() => flash.remove(), 950);
+
+      for (let i = 0; i < 18; i++) {
+        setTimeout(createFallingSymbol, i * 45);
+      }
     });
 
-    function createHeart() {
-      const heart = document.createElement("div");
-      heart.className = "heart";
-      heart.textContent = "❤";
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.animationDuration = 4 + Math.random() * 4 + "s";
-      heart.style.fontSize = 18 + Math.random() * 28 + "px";
-      document.body.appendChild(heart);
+    function createFallingSymbol() {
+      const symbol = document.createElement("div");
+      symbol.className = "falling-symbol";
+      symbol.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+      symbol.style.left = Math.random() * 100 + "vw";
+      symbol.style.animationDuration = 3.6 + Math.random() * 4.2 + "s";
+      symbol.style.fontSize = 18 + Math.random() * 30 + "px";
+      symbol.style.opacity = 0.65 + Math.random() * 0.35;
+      document.body.appendChild(symbol);
 
-      setTimeout(() => heart.remove(), 8000);
+      setTimeout(() => symbol.remove(), 8500);
     }
 
-    setInterval(createHeart, 350);
+    setInterval(createFallingSymbol, 430);
   </script>
 </body>
 </html>
@@ -791,5 +889,13 @@ class MainActivity : ComponentActivity() {
             .replace(">", "&gt;")
             .replace("\"", "&quot;")
             .replace("'", "&#039;")
+    }
+
+    private fun escapeJs(text: String): String {
+        return text
+            .replace("\\", "\\\\")
+            .replace("\"", "\\\"")
+            .replace("\n", "\\n")
+            .replace("\r", "")
     }
 }
