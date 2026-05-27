@@ -321,6 +321,31 @@ class MainActivity : ComponentActivity() {
         setContentView(scrollView)
     }
 
+    private fun sharePrankButtonApp() {
+        val packageName = packageName
+
+        val playStoreLink = "https://play.google.com/store/apps/details?id=$packageName"
+
+        val shareText = """
+${getString(R.string.share_prank_button_text)}
+
+$playStoreLink
+    """.trimIndent()
+
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, shareText)
+        }
+
+        startActivity(
+            Intent.createChooser(
+                shareIntent,
+                getString(R.string.share_app_chooser_title)
+            )
+        )
+    }
+
+
     private fun showThemeSelection() {
         selectedImageUri = null
 
@@ -374,7 +399,23 @@ class MainActivity : ComponentActivity() {
             }
 
             layout.addView(button, matchWrapWithBottomMargin(dp(14)))
+
         }
+        val shareAppButton = Button(this).apply {
+            text = getString(R.string.share_prank_button)
+            textSize = 18f
+            setTextColor(Color.WHITE)
+            typeface = Typeface.DEFAULT_BOLD
+            background = roundedButtonDrawable("#16A34A")
+            setPadding(dp(18), dp(15), dp(18), dp(15))
+            isAllCaps = false
+            setOnClickListener {
+                sharePrankButtonApp()
+            }
+        }
+
+        layout.addView(shareAppButton, matchWrapWithBottomMargin(dp(18)))
+
 
         scrollView.addView(layout)
         setContentView(scrollView)

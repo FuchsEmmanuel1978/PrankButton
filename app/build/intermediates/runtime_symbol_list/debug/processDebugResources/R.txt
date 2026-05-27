@@ -272,6 +272,9 @@ int string field_title 0x7f090026
 int string no_image_selected 0x7f090027
 int string no_photo 0x7f090028
 int string selected_photo 0x7f090029
+int string share_app_chooser_title 0x7f09005e
+int string share_prank_button 0x7f09005f
+int string share_prank_button_text 0x7f090060
 int string status_bar_notification_info_overflow 0x7f09002a
 int string theme_birthday_final 0x7f09002b
 int string theme_birthday_name 0x7f09002c

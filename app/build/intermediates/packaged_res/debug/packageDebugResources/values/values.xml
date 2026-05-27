@@ -18,6 +18,9 @@
     <string name="no_image_selected">Aucune photo sélectionnée</string>
     <string name="no_photo">Choisis d’abord une photo 😉</string>
     <string name="selected_photo">Photo sélectionnée</string>
+    <string name="share_app_chooser_title">Partager avec</string>
+    <string name="share_prank_button">Partager Prank Button 😄</string>
+    <string name="share_prank_button_text">Découvre Prank Button 😄 Une appli pour créer des pages pièges rigolotes à envoyer sur WhatsApp !</string>
     <string name="theme_birthday_final">Trop tard, la surprise arrive 🎉🎂</string>
     <string name="theme_birthday_name">Anniversaire</string>
     <string name="theme_birthday_no">Non 😭</string>

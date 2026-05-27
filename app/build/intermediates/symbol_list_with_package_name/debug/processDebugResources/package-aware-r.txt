@@ -273,6 +273,9 @@ string field_title
 string no_image_selected
 string no_photo
 string selected_photo
+string share_app_chooser_title
+string share_prank_button
+string share_prank_button_text
 string status_bar_notification_info_overflow
 string theme_birthday_final
 string theme_birthday_name
