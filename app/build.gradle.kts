@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.missioncupidon"
-        minSdk = 23
+        minSdk = 24
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -28,4 +28,5 @@ android {
 dependencies {
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.activity:activity-ktx:1.9.3")
+    implementation("com.startapp:inapp-sdk:5.+")
 }

@@ -3,22 +3,40 @@ package com.example.missioncupidon
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Base64
+import android.util.TypedValue
 import android.view.Gravity
-import android.widget.*
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.ScrollView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.ComponentActivity
 import androidx.core.content.FileProvider
+import com.startapp.sdk.adsbase.StartAppAd
+import com.startapp.sdk.adsbase.StartAppSDK
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.util.Locale
 
 class MainActivity : ComponentActivity() {
 
     private var selectedImageUri: Uri? = null
     private lateinit var imagePreview: ImageView
+    private lateinit var startAppAd: StartAppAd
+    private var creationScreenOpenCount = 0
 
     private val pickImageLauncher = registerForActivityResult(
         ActivityResultContracts.PickVisualMedia()
@@ -27,7 +45,7 @@ class MainActivity : ComponentActivity() {
             selectedImageUri = uri
             imagePreview.setImageURI(uri)
         } else {
-            Toast.makeText(this, "Aucune photo sélectionnée", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.no_image_selected), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -38,125 +56,177 @@ class MainActivity : ComponentActivity() {
         val question: String,
         val yesText: String,
         val noText: String,
-        val finalMessage: String
-    )
-
-    private val themes = listOf(
-        PrankTheme(
-            name = "Amour",
-            emoji = "❤️",
-            title = "Ma chérie ❤️",
-            question = "Est-ce que tu m’aimes ?",
-            yesText = "Oui 💖",
-            noText = "Non 😢",
-            finalMessage = "Je le savais 😍 Moi aussi je t’aime fort ❤️"
-        ),
-        PrankTheme(
-            name = "Apéro",
-            emoji = "🍻",
-            title = "Question importante 🍻",
-            question = "Est-ce l’heure de l’apéro ?",
-            yesText = "Oui 🍻",
-            noText = "Non 😱",
-            finalMessage = "Bonne réponse 😄 Santé ! 🍻"
-        ),
-        PrankTheme(
-            name = "Fan",
-            emoji = "⚽",
-            title = "Question de supporter ⚽",
-            question = "Quelle est la meilleure équipe ?",
-            yesText = "La mienne 🔥",
-            noText = "L’autre 😬",
-            finalMessage = "Voilà, enfin quelqu’un de lucide 😄⚽"
-        ),
-        PrankTheme(
-            name = "Famille",
-            emoji = "👨‍👩‍👧‍👦",
-            title = "Question familiale 👨‍👩‍👧‍👦",
-            question = "Qui est le plus drôle de la famille ?",
-            yesText = "Toi 😄",
-            noText = "Pas toi 😅",
-            finalMessage = "Je savais que tu dirais la vérité 😄"
-        ),
-        PrankTheme(
-            name = "Amis",
-            emoji = "😎",
-            title = "Question entre amis 😎",
-            question = "Tu reconnais que je suis le plus fort ?",
-            yesText = "Oui 😎",
-            noText = "Jamais 😂",
-            finalMessage = "Merci, c’est noté officiellement 😎"
-        ),
-        PrankTheme(
-            name = "Anniversaire",
-            emoji = "🎂",
-            title = "Surprise 🎂",
-            question = "Tu veux ton cadeau maintenant ?",
-            yesText = "Oui 🎁",
-            noText = "Non 😭",
-            finalMessage = "Trop tard, la surprise arrive 🎉🎂"
-        ),
-        PrankTheme(
-            name = "Travail",
-            emoji = "💼",
-            title = "Question professionnelle 💼",
-            question = "Est-ce que cette réunion aurait pu être un email ?",
-            yesText = "Oui 📧",
-            noText = "Non 💼",
-            finalMessage = "Enfin quelqu’un de raisonnable 😄📧"
-        )
+        val finalMessage: String,
+        val colorStart: String,
+        val colorEnd: String,
+        val accentColor: String
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        showThemeSelection()
+
+        StartAppSDK.init(this, "205489527", false)
+        startAppAd = StartAppAd(this)
+
+        showSplashScreen()
+    }
+
+    private fun getThemes(): List<PrankTheme> = listOf(
+        PrankTheme(
+            getString(R.string.theme_love_name),
+            "❤️",
+            getString(R.string.theme_love_title),
+            getString(R.string.theme_love_question),
+            getString(R.string.theme_love_yes),
+            getString(R.string.theme_love_no),
+            getString(R.string.theme_love_final),
+            "#FF5F9E",
+            "#A855F7",
+            "#FF3D81"
+        ),
+        PrankTheme(
+            getString(R.string.theme_drinks_name),
+            "🍻",
+            getString(R.string.theme_drinks_title),
+            getString(R.string.theme_drinks_question),
+            getString(R.string.theme_drinks_yes),
+            getString(R.string.theme_drinks_no),
+            getString(R.string.theme_drinks_final),
+            "#F59E0B",
+            "#EF4444",
+            "#D97706"
+        ),
+        PrankTheme(
+            getString(R.string.theme_fan_name),
+            "⚽",
+            getString(R.string.theme_fan_title),
+            getString(R.string.theme_fan_question),
+            getString(R.string.theme_fan_yes),
+            getString(R.string.theme_fan_no),
+            getString(R.string.theme_fan_final),
+            "#0EA5E9",
+            "#22C55E",
+            "#0284C7"
+        ),
+        PrankTheme(
+            getString(R.string.theme_family_name),
+            "👨‍👩‍👧‍👦",
+            getString(R.string.theme_family_title),
+            getString(R.string.theme_family_question),
+            getString(R.string.theme_family_yes),
+            getString(R.string.theme_family_no),
+            getString(R.string.theme_family_final),
+            "#FB7185",
+            "#FDBA74",
+            "#F43F5E"
+        ),
+        PrankTheme(
+            getString(R.string.theme_friends_name),
+            "😎",
+            getString(R.string.theme_friends_title),
+            getString(R.string.theme_friends_question),
+            getString(R.string.theme_friends_yes),
+            getString(R.string.theme_friends_no),
+            getString(R.string.theme_friends_final),
+            "#8B5CF6",
+            "#3B82F6",
+            "#7C3AED"
+        ),
+        PrankTheme(
+            getString(R.string.theme_birthday_name),
+            "🎂",
+            getString(R.string.theme_birthday_title),
+            getString(R.string.theme_birthday_question),
+            getString(R.string.theme_birthday_yes),
+            getString(R.string.theme_birthday_no),
+            getString(R.string.theme_birthday_final),
+            "#EC4899",
+            "#F97316",
+            "#DB2777"
+        ),
+        PrankTheme(
+            getString(R.string.theme_work_name),
+            "💼",
+            getString(R.string.theme_work_title),
+            getString(R.string.theme_work_question),
+            getString(R.string.theme_work_yes),
+            getString(R.string.theme_work_no),
+            getString(R.string.theme_work_final),
+            "#64748B",
+            "#0EA5E9",
+            "#475569"
+        )
+    )
+
+    private fun showSplashScreen() {
+        val splashImage = ImageView(this).apply {
+            setImageResource(R.drawable.splash_prank)
+            scaleType = ImageView.ScaleType.CENTER_CROP
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+        }
+
+        setContentView(splashImage)
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            showThemeSelection()
+        }, 1800)
     }
 
     private fun showThemeSelection() {
         selectedImageUri = null
 
         val scrollView = ScrollView(this)
+        scrollView.background = gradientDrawable("#FF5F9E", "#7C3AED")
 
         val layout = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(36, 60, 36, 36)
+            setPadding(dp(20), dp(32), dp(20), dp(24))
+        }
+
+        val topCard = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
             gravity = Gravity.CENTER_HORIZONTAL
+            background = cardDrawable()
+            setPadding(dp(20), dp(24), dp(20), dp(24))
         }
 
         val title = TextView(this).apply {
-            text = "Prank Button 😄"
-            textSize = 34f
+            text = getString(R.string.app_title)
+            textSize = 30f
+            setTextColor(Color.WHITE)
+            typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
         }
 
         val subtitle = TextView(this).apply {
-            text = "Choisis un thème pour ta page piège"
-            textSize = 18f
+            text = getString(R.string.choose_theme)
+            textSize = 16f
+            setTextColor(Color.parseColor("#FCE7F3"))
             gravity = Gravity.CENTER
-            setPadding(0, 18, 0, 36)
+            setPadding(0, dp(8), 0, dp(4))
         }
 
-        layout.addView(title)
-        layout.addView(subtitle)
+        topCard.addView(title)
+        topCard.addView(subtitle)
+        layout.addView(topCard, matchWrapWithBottomMargin(dp(20)))
 
-        themes.forEach { theme ->
+        getThemes().forEach { theme ->
             val button = Button(this).apply {
-                text = "${theme.emoji} ${theme.name}"
+                text = "${theme.emoji}  ${theme.name}"
                 textSize = 20f
-                setPadding(16, 18, 16, 18)
+                setTextColor(Color.WHITE)
+                typeface = Typeface.DEFAULT_BOLD
+                background = roundedButtonDrawable(theme.accentColor)
+                setPadding(dp(18), dp(16), dp(18), dp(16))
                 setOnClickListener {
                     showCreationScreen(theme)
                 }
             }
 
-            val params = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(0, 0, 0, 18)
-            }
-
-            layout.addView(button, params)
+            layout.addView(button, matchWrapWithBottomMargin(dp(14)))
         }
 
         scrollView.addView(layout)
@@ -164,15 +234,32 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun showCreationScreen(theme: PrankTheme) {
+        creationScreenOpenCount++
+
+        if (creationScreenOpenCount >= 2) {
+            startAppAd.showAd()
+            startAppAd.loadAd()
+        }
+
         val scrollView = ScrollView(this)
+        scrollView.background = gradientDrawable(theme.colorStart, theme.colorEnd)
 
         val layout = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(36, 50, 36, 36)
+            setPadding(dp(18), dp(24), dp(18), dp(24))
+        }
+
+        val headerCard = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            background = cardDrawable()
+            setPadding(dp(20), dp(20), dp(20), dp(20))
         }
 
         val backButton = Button(this).apply {
-            text = "← Changer de thème"
+            text = getString(R.string.change_theme)
+            setTextColor(Color.WHITE)
+            textSize = 16f
+            background = roundedButtonDrawable("#374151")
             setOnClickListener {
                 showThemeSelection()
             }
@@ -180,45 +267,52 @@ class MainActivity : ComponentActivity() {
 
         val titleApp = TextView(this).apply {
             text = "${theme.emoji} ${theme.name}"
-            textSize = 30f
+            textSize = 28f
+            setTextColor(Color.WHITE)
+            typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
-            setPadding(0, 20, 0, 24)
+            setPadding(0, dp(16), 0, dp(8))
         }
 
-        val titleInput = EditText(this).apply {
-            hint = "Titre"
-            setText(theme.title)
+        val smallText = TextView(this).apply {
+            text = getString(R.string.edit_instruction)
+            textSize = 15f
+            setTextColor(Color.parseColor("#F9FAFB"))
+            gravity = Gravity.CENTER
         }
 
-        val questionInput = EditText(this).apply {
-            hint = "Question"
-            setText(theme.question)
+        headerCard.addView(backButton)
+        headerCard.addView(titleApp)
+        headerCard.addView(smallText)
+
+        val formCard = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            background = cardDrawable()
+            setPadding(dp(18), dp(18), dp(18), dp(18))
         }
 
-        val yesInput = EditText(this).apply {
-            hint = "Texte du bouton positif"
-            setText(theme.yesText)
-        }
-
-        val noInput = EditText(this).apply {
-            hint = "Texte du bouton qui fuit"
-            setText(theme.noText)
-        }
-
-        val finalMessageInput = EditText(this).apply {
-            hint = "Message après le clic"
-            setText(theme.finalMessage)
-        }
+        val titleInput = styledEditText(getString(R.string.field_title), theme.title)
+        val questionInput = styledEditText(getString(R.string.field_question), theme.question)
+        val yesInput = styledEditText(getString(R.string.field_positive_button), theme.yesText)
+        val noInput = styledEditText(getString(R.string.field_escaping_button), theme.noText)
+        val finalMessageInput = styledEditText(getString(R.string.field_final_message), theme.finalMessage)
 
         imagePreview = ImageView(this).apply {
             adjustViewBounds = true
-            maxHeight = 420
-            setPadding(0, 24, 0, 24)
+            minimumHeight = dp(180)
+            scaleType = ImageView.ScaleType.CENTER_CROP
+            background = imageFrameDrawable()
             setImageResource(android.R.drawable.ic_menu_gallery)
+            setPadding(dp(8), dp(8), dp(8), dp(8))
         }
 
         val choosePhotoButton = Button(this).apply {
-            text = "Choisir une photo 📸"
+            text = getString(R.string.choose_photo)
+            setTextColor(Color.WHITE)
+            textSize = 17f
+            typeface = Typeface.DEFAULT_BOLD
+            background = roundedButtonDrawable(theme.accentColor)
+            setPadding(dp(16), dp(14), dp(16), dp(14))
             setOnClickListener {
                 pickImageLauncher.launch(
                     PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
@@ -227,8 +321,12 @@ class MainActivity : ComponentActivity() {
         }
 
         val sendButton = Button(this).apply {
-            text = "Créer et envoyer sur WhatsApp 🚀"
-            textSize = 20f
+            text = getString(R.string.create_send_whatsapp)
+            setTextColor(Color.WHITE)
+            textSize = 18f
+            typeface = Typeface.DEFAULT_BOLD
+            background = roundedButtonDrawable("#16A34A")
+            setPadding(dp(18), dp(16), dp(18), dp(16))
             setOnClickListener {
                 val title = titleInput.text.toString().ifBlank { theme.title }
                 val question = questionInput.text.toString().ifBlank { theme.question }
@@ -246,16 +344,28 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        layout.addView(backButton)
-        layout.addView(titleApp)
-        layout.addView(titleInput)
-        layout.addView(questionInput)
-        layout.addView(yesInput)
-        layout.addView(noInput)
-        layout.addView(finalMessageInput)
-        layout.addView(imagePreview)
-        layout.addView(choosePhotoButton)
-        layout.addView(sendButton)
+        formCard.addView(label(getString(R.string.field_title)))
+        formCard.addView(titleInput, matchWrapWithBottomMargin(dp(12)))
+
+        formCard.addView(label(getString(R.string.field_question)))
+        formCard.addView(questionInput, matchWrapWithBottomMargin(dp(12)))
+
+        formCard.addView(label(getString(R.string.field_positive_button)))
+        formCard.addView(yesInput, matchWrapWithBottomMargin(dp(12)))
+
+        formCard.addView(label(getString(R.string.field_escaping_button)))
+        formCard.addView(noInput, matchWrapWithBottomMargin(dp(12)))
+
+        formCard.addView(label(getString(R.string.field_final_message)))
+        formCard.addView(finalMessageInput, matchWrapWithBottomMargin(dp(16)))
+
+        formCard.addView(label(getString(R.string.selected_photo)))
+        formCard.addView(imagePreview, matchWrapWithBottomMargin(dp(14)))
+        formCard.addView(choosePhotoButton, matchWrapWithBottomMargin(dp(14)))
+        formCard.addView(sendButton)
+
+        layout.addView(headerCard, matchWrapWithBottomMargin(dp(18)))
+        layout.addView(formCard)
 
         scrollView.addView(layout)
         setContentView(scrollView)
@@ -270,7 +380,7 @@ class MainActivity : ComponentActivity() {
     ) {
         try {
             if (selectedImageUri == null) {
-                Toast.makeText(this, "Choisis d’abord une photo 😉", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, getString(R.string.no_photo), Toast.LENGTH_LONG).show()
                 return
             }
 
@@ -303,9 +413,13 @@ class MainActivity : ComponentActivity() {
             startActivity(shareIntent)
 
         } catch (e: ActivityNotFoundException) {
-            Toast.makeText(this, "WhatsApp n'est pas installé 😢", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.whatsapp_not_installed), Toast.LENGTH_LONG).show()
         } catch (e: Exception) {
-            Toast.makeText(this, "Erreur : ${e.message}", Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                this,
+                getString(R.string.error_prefix) + (e.message ?: ""),
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
@@ -314,7 +428,6 @@ class MainActivity : ComponentActivity() {
             ?: throw IllegalArgumentException("Impossible de lire l'image")
 
         val bitmap = BitmapFactory.decodeStream(inputStream)
-
         val outputStream = ByteArrayOutputStream()
         bitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 82, outputStream)
 
@@ -335,18 +448,17 @@ class MainActivity : ComponentActivity() {
         val safeYesText = escapeHtml(yesText)
         val safeNoText = escapeHtml(noText)
         val safeFinalMessage = escapeHtml(finalMessage)
+        val htmlLang = Locale.getDefault().language.ifBlank { "en" }
 
         return """
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="$htmlLang">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prank Button 😄</title>
+  <title>${getString(R.string.app_name)}</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -396,9 +508,7 @@ class MainActivity : ComponentActivity() {
       pointer-events: none;
     }
 
-    .card.photo-reveal .buttons {
-      display: none;
-    }
+    .card.photo-reveal .buttons { display: none; }
 
     .card.photo-reveal h1,
     .card.photo-reveal p,
@@ -589,6 +699,89 @@ class MainActivity : ComponentActivity() {
 </body>
 </html>
         """.trimIndent()
+    }
+
+    private fun styledEditText(hint: String, defaultText: String): EditText {
+        return EditText(this).apply {
+            this.hint = hint
+            setText(defaultText)
+            setTextColor(Color.parseColor("#111827"))
+            setHintTextColor(Color.parseColor("#9CA3AF"))
+            textSize = 16f
+            background = inputDrawable()
+            setPadding(dp(16), dp(14), dp(16), dp(14))
+        }
+    }
+
+    private fun label(text: String): TextView {
+        return TextView(this).apply {
+            this.text = text
+            setTextColor(Color.parseColor("#374151"))
+            textSize = 14f
+            typeface = Typeface.DEFAULT_BOLD
+            setPadding(0, 0, 0, dp(6))
+        }
+    }
+
+    private fun gradientDrawable(start: String, end: String): GradientDrawable {
+        return GradientDrawable(
+            GradientDrawable.Orientation.TOP_BOTTOM,
+            intArrayOf(Color.parseColor(start), Color.parseColor(end))
+        ).apply {
+            cornerRadius = 0f
+        }
+    }
+
+    private fun roundedButtonDrawable(color: String): GradientDrawable {
+        return GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = dp(18).toFloat()
+            setColor(Color.parseColor(color))
+        }
+    }
+
+    private fun inputDrawable(): GradientDrawable {
+        return GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = dp(16).toFloat()
+            setColor(Color.WHITE)
+            setStroke(dp(1), Color.parseColor("#E5E7EB"))
+        }
+    }
+
+    private fun cardDrawable(): GradientDrawable {
+        return GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = dp(24).toFloat()
+            setColor(Color.parseColor("#22FFFFFF"))
+            setStroke(dp(1), Color.parseColor("#55FFFFFF"))
+        }
+    }
+
+    private fun imageFrameDrawable(): GradientDrawable {
+        return GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = dp(18).toFloat()
+            setColor(Color.parseColor("#FFFFFFFF"))
+            setStroke(dp(1), Color.parseColor("#E5E7EB"))
+        }
+    }
+
+    private fun matchWrapWithBottomMargin(bottom: Int): LinearLayout.LayoutParams {
+        return LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        ).apply {
+            bottomMargin = bottom
+        }
+    }
+
+    private fun dp(value: Int): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            value.toFloat(),
+            resources.displayMetrics
+        ).toInt()
     }
 
     private fun escapeHtml(text: String): String {
