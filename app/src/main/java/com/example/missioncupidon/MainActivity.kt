@@ -2,35 +2,23 @@ package com.example.missioncupidon
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.util.Base64
 import android.view.Gravity
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.ScrollView
-import android.widget.TextView
-import android.widget.Toast
-import androidx.activity.ComponentActivity
+import android.widget.*
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.ComponentActivity
 import androidx.core.content.FileProvider
 import java.io.ByteArrayOutputStream
 import java.io.File
-import kotlin.math.max
-import kotlin.math.roundToInt
 
 class MainActivity : ComponentActivity() {
 
     private var selectedImageUri: Uri? = null
     private lateinit var imagePreview: ImageView
-    private lateinit var chosenPhotoText: TextView
 
     private val pickImageLauncher = registerForActivityResult(
         ActivityResultContracts.PickVisualMedia()
@@ -38,76 +26,199 @@ class MainActivity : ComponentActivity() {
         if (uri != null) {
             selectedImageUri = uri
             imagePreview.setImageURI(uri)
-            chosenPhotoText.text = "Photo sélectionnée ✅"
         } else {
             Toast.makeText(this, "Aucune photo sélectionnée", Toast.LENGTH_SHORT).show()
         }
     }
 
+    data class PrankTheme(
+        val name: String,
+        val emoji: String,
+        val title: String,
+        val question: String,
+        val yesText: String,
+        val noText: String,
+        val finalMessage: String
+    )
+
+    private val themes = listOf(
+        PrankTheme(
+            name = "Amour",
+            emoji = "❤️",
+            title = "Ma chérie ❤️",
+            question = "Est-ce que tu m’aimes ?",
+            yesText = "Oui 💖",
+            noText = "Non 😢",
+            finalMessage = "Je le savais 😍 Moi aussi je t’aime fort ❤️"
+        ),
+        PrankTheme(
+            name = "Apéro",
+            emoji = "🍻",
+            title = "Question importante 🍻",
+            question = "Est-ce l’heure de l’apéro ?",
+            yesText = "Oui 🍻",
+            noText = "Non 😱",
+            finalMessage = "Bonne réponse 😄 Santé ! 🍻"
+        ),
+        PrankTheme(
+            name = "Fan",
+            emoji = "⚽",
+            title = "Question de supporter ⚽",
+            question = "Quelle est la meilleure équipe ?",
+            yesText = "La mienne 🔥",
+            noText = "L’autre 😬",
+            finalMessage = "Voilà, enfin quelqu’un de lucide 😄⚽"
+        ),
+        PrankTheme(
+            name = "Famille",
+            emoji = "👨‍👩‍👧‍👦",
+            title = "Question familiale 👨‍👩‍👧‍👦",
+            question = "Qui est le plus drôle de la famille ?",
+            yesText = "Toi 😄",
+            noText = "Pas toi 😅",
+            finalMessage = "Je savais que tu dirais la vérité 😄"
+        ),
+        PrankTheme(
+            name = "Amis",
+            emoji = "😎",
+            title = "Question entre amis 😎",
+            question = "Tu reconnais que je suis le plus fort ?",
+            yesText = "Oui 😎",
+            noText = "Jamais 😂",
+            finalMessage = "Merci, c’est noté officiellement 😎"
+        ),
+        PrankTheme(
+            name = "Anniversaire",
+            emoji = "🎂",
+            title = "Surprise 🎂",
+            question = "Tu veux ton cadeau maintenant ?",
+            yesText = "Oui 🎁",
+            noText = "Non 😭",
+            finalMessage = "Trop tard, la surprise arrive 🎉🎂"
+        ),
+        PrankTheme(
+            name = "Travail",
+            emoji = "💼",
+            title = "Question professionnelle 💼",
+            question = "Est-ce que cette réunion aurait pu être un email ?",
+            yesText = "Oui 📧",
+            noText = "Non 💼",
+            finalMessage = "Enfin quelqu’un de raisonnable 😄📧"
+        )
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        showThemeSelection()
+    }
 
-        val rootGradient = GradientDrawable(
-            GradientDrawable.Orientation.TL_BR,
-            intArrayOf(0xFFFFDDE1.toInt(), 0xFFEE9CA7.toInt())
-        )
+    private fun showThemeSelection() {
+        selectedImageUri = null
 
-        val scrollView = ScrollView(this).apply {
-            background = rootGradient
-        }
+        val scrollView = ScrollView(this)
 
         val layout = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dp(24), dp(42), dp(24), dp(32))
+            setPadding(36, 60, 36, 36)
             gravity = Gravity.CENTER_HORIZONTAL
         }
 
-        val titleApp = TextView(this).apply {
-            text = "Mission Cupidon 💘"
-            textSize = 32f
+        val title = TextView(this).apply {
+            text = "Prank Button 😄"
+            textSize = 34f
             gravity = Gravity.CENTER
-            setTextColor(0xFF8A1744.toInt())
-            setPadding(0, 0, 0, dp(8))
         }
 
         val subtitle = TextView(this).apply {
-            text = "Crée une page surprise, choisis une photo, puis envoie-la sur WhatsApp 😄"
-            textSize = 17f
+            text = "Choisis un thème pour ta page piège"
+            textSize = 18f
             gravity = Gravity.CENTER
-            setTextColor(0xFF633044.toInt())
-            setPadding(0, 0, 0, dp(22))
+            setPadding(0, 18, 0, 36)
         }
 
-        val titleInput = makeEditText("Titre", "Ma chérie ❤️")
-        val questionInput = makeEditText("Question", "Est-ce que tu m’aimes ?")
-        val finalMessageInput = makeEditText(
-            "Message après le Oui",
-            "Je le savais 😍 Moi aussi je t’aime fort ❤️"
-        )
+        layout.addView(title)
+        layout.addView(subtitle)
 
-        imagePreview = ImageView(this).apply {
-            adjustViewBounds = true
-            scaleType = ImageView.ScaleType.CENTER_CROP
-            setImageResource(android.R.drawable.ic_menu_gallery)
-            background = roundedBackground(0x55FFFFFF)
-            setPadding(dp(16), dp(16), dp(16), dp(16))
-            layoutParams = LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                dp(220)
+        themes.forEach { theme ->
+            val button = Button(this).apply {
+                text = "${theme.emoji} ${theme.name}"
+                textSize = 20f
+                setPadding(16, 18, 16, 18)
+                setOnClickListener {
+                    showCreationScreen(theme)
+                }
+            }
+
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply {
-                setMargins(0, dp(14), 0, dp(8))
+                setMargins(0, 0, 0, 18)
+            }
+
+            layout.addView(button, params)
+        }
+
+        scrollView.addView(layout)
+        setContentView(scrollView)
+    }
+
+    private fun showCreationScreen(theme: PrankTheme) {
+        val scrollView = ScrollView(this)
+
+        val layout = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(36, 50, 36, 36)
+        }
+
+        val backButton = Button(this).apply {
+            text = "← Changer de thème"
+            setOnClickListener {
+                showThemeSelection()
             }
         }
 
-        chosenPhotoText = TextView(this).apply {
-            text = "Aucune photo sélectionnée"
-            textSize = 15f
+        val titleApp = TextView(this).apply {
+            text = "${theme.emoji} ${theme.name}"
+            textSize = 30f
             gravity = Gravity.CENTER
-            setTextColor(0xFF633044.toInt())
-            setPadding(0, 0, 0, dp(10))
+            setPadding(0, 20, 0, 24)
         }
 
-        val choosePhotoButton = makeButton("Choisir une photo 📸").apply {
+        val titleInput = EditText(this).apply {
+            hint = "Titre"
+            setText(theme.title)
+        }
+
+        val questionInput = EditText(this).apply {
+            hint = "Question"
+            setText(theme.question)
+        }
+
+        val yesInput = EditText(this).apply {
+            hint = "Texte du bouton positif"
+            setText(theme.yesText)
+        }
+
+        val noInput = EditText(this).apply {
+            hint = "Texte du bouton qui fuit"
+            setText(theme.noText)
+        }
+
+        val finalMessageInput = EditText(this).apply {
+            hint = "Message après le clic"
+            setText(theme.finalMessage)
+        }
+
+        imagePreview = ImageView(this).apply {
+            adjustViewBounds = true
+            maxHeight = 420
+            setPadding(0, 24, 0, 24)
+            setImageResource(android.R.drawable.ic_menu_gallery)
+        }
+
+        val choosePhotoButton = Button(this).apply {
+            text = "Choisir une photo 📸"
             setOnClickListener {
                 pickImageLauncher.launch(
                     PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
@@ -115,25 +226,34 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        val sendButton = makeButton("Créer et envoyer sur WhatsApp ❤️").apply {
+        val sendButton = Button(this).apply {
+            text = "Créer et envoyer sur WhatsApp 🚀"
             textSize = 20f
             setOnClickListener {
-                val title = titleInput.text.toString().ifBlank { "Ma chérie ❤️" }
-                val question = questionInput.text.toString().ifBlank { "Est-ce que tu m’aimes ?" }
-                val finalMessage = finalMessageInput.text.toString()
-                    .ifBlank { "Je le savais 😍 Moi aussi je t’aime fort ❤️" }
+                val title = titleInput.text.toString().ifBlank { theme.title }
+                val question = questionInput.text.toString().ifBlank { theme.question }
+                val yesText = yesInput.text.toString().ifBlank { theme.yesText }
+                val noText = noInput.text.toString().ifBlank { theme.noText }
+                val finalMessage = finalMessageInput.text.toString().ifBlank { theme.finalMessage }
 
-                createAndShareHtml(title, question, finalMessage)
+                createAndShareHtml(
+                    title = title,
+                    question = question,
+                    yesText = yesText,
+                    noText = noText,
+                    finalMessage = finalMessage
+                )
             }
         }
 
+        layout.addView(backButton)
         layout.addView(titleApp)
-        layout.addView(subtitle)
         layout.addView(titleInput)
         layout.addView(questionInput)
+        layout.addView(yesInput)
+        layout.addView(noInput)
         layout.addView(finalMessageInput)
         layout.addView(imagePreview)
-        layout.addView(chosenPhotoText)
         layout.addView(choosePhotoButton)
         layout.addView(sendButton)
 
@@ -141,62 +261,30 @@ class MainActivity : ComponentActivity() {
         setContentView(scrollView)
     }
 
-    private fun makeEditText(hintText: String, defaultValue: String): EditText {
-        return EditText(this).apply {
-            hint = hintText
-            setText(defaultValue)
-            textSize = 17f
-            setSingleLine(false)
-            minLines = 1
-            maxLines = 3
-            setTextColor(0xFF4B1D31.toInt())
-            setHintTextColor(0xFF9C6077.toInt())
-            background = roundedBackground(0xEEFFFFFF.toInt())
-            setPadding(dp(16), dp(10), dp(16), dp(10))
-            layoutParams = LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(0, dp(8), 0, dp(8))
-            }
-        }
-    }
-
-    private fun makeButton(label: String): Button {
-        return Button(this).apply {
-            text = label
-            textSize = 18f
-            setTextColor(0xFFFFFFFF.toInt())
-            background = roundedBackground(0xFFFF4D88.toInt())
-            setPadding(dp(16), dp(10), dp(16), dp(10))
-            layoutParams = LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                dp(56)
-            ).apply {
-                setMargins(0, dp(8), 0, dp(8))
-            }
-        }
-    }
-
-    private fun roundedBackground(color: Int): GradientDrawable {
-        return GradientDrawable().apply {
-            setColor(color)
-            cornerRadius = dp(18).toFloat()
-        }
-    }
-
-    private fun createAndShareHtml(title: String, question: String, finalMessage: String) {
+    private fun createAndShareHtml(
+        title: String,
+        question: String,
+        yesText: String,
+        noText: String,
+        finalMessage: String
+    ) {
         try {
-            val photoUri = selectedImageUri
-            if (photoUri == null) {
+            if (selectedImageUri == null) {
                 Toast.makeText(this, "Choisis d’abord une photo 😉", Toast.LENGTH_LONG).show()
                 return
             }
 
-            val imageBase64 = convertImageToBase64(photoUri)
-            val html = generateHtml(title, question, finalMessage, imageBase64)
+            val imageBase64 = convertImageToBase64(selectedImageUri!!)
+            val html = generateHtml(
+                title = title,
+                question = question,
+                yesText = yesText,
+                noText = noText,
+                finalMessage = finalMessage,
+                imageBase64 = imageBase64
+            )
 
-            val outputFile = File(cacheDir, "ouvre_moi.html")
+            val outputFile = File(cacheDir, "prank_button.html")
             outputFile.writeText(html, Charsets.UTF_8)
 
             val uri = FileProvider.getUriForFile(
@@ -212,7 +300,7 @@ class MainActivity : ComponentActivity() {
                 setPackage("com.whatsapp")
             }
 
-            startActivity(Intent.createChooser(shareIntent, "Envoyer avec"))
+            startActivity(shareIntent)
 
         } catch (e: ActivityNotFoundException) {
             Toast.makeText(this, "WhatsApp n'est pas installé 😢", Toast.LENGTH_LONG).show()
@@ -222,66 +310,30 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun convertImageToBase64(uri: Uri): String {
-        val maxSize = 1400
+        val inputStream = contentResolver.openInputStream(uri)
+            ?: throw IllegalArgumentException("Impossible de lire l'image")
 
-        val options = BitmapFactory.Options().apply {
-            inJustDecodeBounds = true
-        }
-
-        contentResolver.openInputStream(uri)?.use { input ->
-            BitmapFactory.decodeStream(input, null, options)
-        } ?: throw IllegalArgumentException("Impossible de lire l'image")
-
-        val largestSide = max(options.outWidth, options.outHeight)
-        val sampleSize = max(1, (largestSide / maxSize.toFloat()).roundToInt())
-
-        val decodeOptions = BitmapFactory.Options().apply {
-            inSampleSize = sampleSize
-        }
-
-        val bitmap = contentResolver.openInputStream(uri)?.use { input ->
-            BitmapFactory.decodeStream(input, null, decodeOptions)
-        } ?: throw IllegalArgumentException("Impossible de décoder l'image")
-
-        val scaledBitmap = scaleBitmapIfNeeded(bitmap, maxSize)
+        val bitmap = BitmapFactory.decodeStream(inputStream)
 
         val outputStream = ByteArrayOutputStream()
-        scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 82, outputStream)
+        bitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 82, outputStream)
 
-        if (scaledBitmap !== bitmap) {
-            bitmap.recycle()
-            scaledBitmap.recycle()
-        } else {
-            bitmap.recycle()
-        }
-
-        return Base64.encodeToString(outputStream.toByteArray(), Base64.NO_WRAP)
-    }
-
-    private fun scaleBitmapIfNeeded(bitmap: Bitmap, maxSize: Int): Bitmap {
-        val width = bitmap.width
-        val height = bitmap.height
-        val largestSide = max(width, height)
-
-        if (largestSide <= maxSize) {
-            return bitmap
-        }
-
-        val ratio = maxSize.toFloat() / largestSide.toFloat()
-        val newWidth = (width * ratio).roundToInt()
-        val newHeight = (height * ratio).roundToInt()
-
-        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true)
+        val imageBytes = outputStream.toByteArray()
+        return Base64.encodeToString(imageBytes, Base64.NO_WRAP)
     }
 
     private fun generateHtml(
         title: String,
         question: String,
+        yesText: String,
+        noText: String,
         finalMessage: String,
         imageBase64: String
     ): String {
         val safeTitle = escapeHtml(title)
         val safeQuestion = escapeHtml(question)
+        val safeYesText = escapeHtml(yesText)
+        val safeNoText = escapeHtml(noText)
         val safeFinalMessage = escapeHtml(finalMessage)
 
         return """
@@ -290,9 +342,11 @@ class MainActivity : ComponentActivity() {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Une petite question ❤️</title>
+  <title>Prank Button 😄</title>
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
@@ -342,7 +396,9 @@ class MainActivity : ComponentActivity() {
       pointer-events: none;
     }
 
-    .card.photo-reveal .buttons { display: none; }
+    .card.photo-reveal .buttons {
+      display: none;
+    }
 
     .card.photo-reveal h1,
     .card.photo-reveal p,
@@ -352,12 +408,8 @@ class MainActivity : ComponentActivity() {
     }
 
     .card.photo-reveal h1,
-    .card.photo-reveal p { color: white; }
-
-    .card.photo-reveal .message {
-      background: rgba(0, 0, 0, 0.20);
+    .card.photo-reveal p {
       color: white;
-      backdrop-filter: blur(2px);
     }
 
     h1 {
@@ -375,7 +427,7 @@ class MainActivity : ComponentActivity() {
 
     .buttons {
       position: relative;
-      min-height: 150px;
+      min-height: 140px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -436,20 +488,8 @@ class MainActivity : ComponentActivity() {
     }
 
     @keyframes fall {
-      to { transform: translateY(110vh) rotate(360deg); }
-    }
-
-    @media (max-width: 480px) {
-      .buttons {
-        min-height: 170px;
-        padding: 0 24px;
-      }
-
-      #noBtn { right: 24px; }
-
-      button {
-        padding: 14px 24px;
-        font-size: 1.1rem;
+      to {
+        transform: translateY(110vh) rotate(360deg);
       }
     }
   </style>
@@ -460,11 +500,13 @@ class MainActivity : ComponentActivity() {
     <p>$safeQuestion</p>
 
     <div class="buttons" id="buttonsBox">
-      <button id="yesBtn">Oui 💖</button>
-      <button id="noBtn">Non 😢</button>
+      <button id="yesBtn">$safeYesText</button>
+      <button id="noBtn">$safeNoText</button>
     </div>
 
-    <div class="message" id="message">$safeFinalMessage</div>
+    <div class="message" id="message">
+      $safeFinalMessage
+    </div>
   </main>
 
   <script>
@@ -538,6 +580,7 @@ class MainActivity : ComponentActivity() {
       heart.style.animationDuration = 4 + Math.random() * 4 + "s";
       heart.style.fontSize = 18 + Math.random() * 28 + "px";
       document.body.appendChild(heart);
+
       setTimeout(() => heart.remove(), 8000);
     }
 
@@ -555,9 +598,5 @@ class MainActivity : ComponentActivity() {
             .replace(">", "&gt;")
             .replace("\"", "&quot;")
             .replace("'", "&#039;")
-    }
-
-    private fun dp(value: Int): Int {
-        return (value * resources.displayMetrics.density).roundToInt()
     }
 }

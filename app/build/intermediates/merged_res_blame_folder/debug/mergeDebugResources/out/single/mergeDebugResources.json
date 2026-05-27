@@ -1,18 +1,18 @@
 [
     {
-        "merged": "com.example.missioncupidon.app-debug-27:/xml_file_paths.xml.flat",
-        "source": "com.example.missioncupidon.app-main-29:/xml/file_paths.xml"
+        "merged": "com.example.missioncupidon.app-debug-20:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.example.missioncupidon.app-main-22:/mipmap-anydpi-v26/ic_launcher.xml"
     },
     {
-        "merged": "com.example.missioncupidon.app-debug-27:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
-        "source": "com.example.missioncupidon.app-main-29:/mipmap-anydpi-v26/ic_launcher_round.xml"
+        "merged": "com.example.missioncupidon.app-debug-20:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "com.example.missioncupidon.app-main-22:/drawable/ic_launcher_foreground.xml"
     },
     {
-        "merged": "com.example.missioncupidon.app-debug-27:/drawable_ic_launcher_foreground.xml.flat",
-        "source": "com.example.missioncupidon.app-main-29:/drawable/ic_launcher_foreground.xml"
+        "merged": "com.example.missioncupidon.app-debug-20:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "com.example.missioncupidon.app-main-22:/mipmap-anydpi-v26/ic_launcher_round.xml"
     },
     {
-        "merged": "com.example.missioncupidon.app-debug-27:/mipmap-anydpi-v26_ic_launcher.xml.flat",
-        "source": "com.example.missioncupidon.app-main-29:/mipmap-anydpi-v26/ic_launcher.xml"
+        "merged": "com.example.missioncupidon.app-debug-20:/xml_file_paths.xml.flat",
+        "source": "com.example.missioncupidon.app-main-22:/xml/file_paths.xml"
     }
 ]
