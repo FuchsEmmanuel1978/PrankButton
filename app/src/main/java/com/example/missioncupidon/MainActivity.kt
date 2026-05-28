@@ -44,7 +44,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    data class PrankTheme(
+    data class MoodTemplate(
         val name: String,
         val emoji: String,
         val title: String,
@@ -87,105 +87,54 @@ class MainActivity : ComponentActivity() {
             if (shouldShowTutorial()) {
                 showTutorialScreen()
             } else {
-                showThemeSelection()
+                showMoodSelection()
             }
         }, 1800)
     }
 
-    private fun getThemes(): List<PrankTheme> = listOf(
-        PrankTheme(
-            getString(R.string.theme_love_name),
+    private fun getMoodTemplates(): List<MoodTemplate> = listOf(
+        MoodTemplate(
+            getString(R.string.mood_laugh_name),
+            "😂",
+            getString(R.string.mood_laugh_title),
+            getString(R.string.mood_laugh_question),
+            getString(R.string.mood_laugh_yes),
+            getString(R.string.mood_laugh_no),
+            getString(R.string.mood_laugh_final),
+            "#F97316",
+            "#EC4899",
+            "#EA580C",
+            "#f97316",
+            "#ec4899",
+            "#ea580c",
+            listOf("😂", "🤣", "😄", "✨", "🎉"),
+            "😂"
+        ),
+        MoodTemplate(
+            getString(R.string.mood_love_name),
             "❤️",
-            getString(R.string.theme_love_title),
-            getString(R.string.theme_love_question),
-            getString(R.string.theme_love_yes),
-            getString(R.string.theme_love_no),
-            getString(R.string.theme_love_final),
+            getString(R.string.mood_love_title),
+            getString(R.string.mood_love_question),
+            getString(R.string.mood_love_yes),
+            getString(R.string.mood_love_no),
+            getString(R.string.mood_love_final),
             "#FF5F9E",
             "#A855F7",
             "#FF3D81",
             "#ff5f9e",
             "#a855f7",
             "#ff3d81",
-            listOf("❤️", "💖", "💕", "💘"),
+            listOf("❤️", "💖", "💕", "💘", "✨"),
             "💖"
         ),
-        PrankTheme(
-            getString(R.string.theme_drinks_name),
-            "🍻",
-            getString(R.string.theme_drinks_title),
-            getString(R.string.theme_drinks_question),
-            getString(R.string.theme_drinks_yes),
-            getString(R.string.theme_drinks_no),
-            getString(R.string.theme_drinks_final),
-            "#F59E0B",
-            "#EF4444",
-            "#D97706",
-            "#f59e0b",
-            "#ef4444",
-            "#d97706",
-            listOf("🍻", "🍾", "🥨", "🫒", "🍹"),
-            "🍻"
-        ),
-        PrankTheme(
-            getString(R.string.theme_fan_name),
-            "⚽",
-            getString(R.string.theme_fan_title),
-            getString(R.string.theme_fan_question),
-            getString(R.string.theme_fan_yes),
-            getString(R.string.theme_fan_no),
-            getString(R.string.theme_fan_final),
-            "#0EA5E9",
-            "#22C55E",
-            "#0284C7",
-            "#0ea5e9",
-            "#22c55e",
-            "#0284c7",
-            listOf("⚽", "🏆", "🔥", "📣", "🥅"),
-            "🏆"
-        ),
-        PrankTheme(
-            getString(R.string.theme_family_name),
-            "👨‍👩‍👧‍👦",
-            getString(R.string.theme_family_title),
-            getString(R.string.theme_family_question),
-            getString(R.string.theme_family_yes),
-            getString(R.string.theme_family_no),
-            getString(R.string.theme_family_final),
-            "#FB7185",
-            "#FDBA74",
-            "#F43F5E",
-            "#fb7185",
-            "#fdba74",
-            "#f43f5e",
-            listOf("🏠", "😂", "💛", "⭐", "🍪"),
-            "🏠"
-        ),
-        PrankTheme(
-            getString(R.string.theme_friends_name),
-            "😎",
-            getString(R.string.theme_friends_title),
-            getString(R.string.theme_friends_question),
-            getString(R.string.theme_friends_yes),
-            getString(R.string.theme_friends_no),
-            getString(R.string.theme_friends_final),
-            "#8B5CF6",
-            "#3B82F6",
-            "#7C3AED",
-            "#8b5cf6",
-            "#3b82f6",
-            "#7c3aed",
-            listOf("😎", "😂", "🔥", "🎮", "🤜"),
-            "😎"
-        ),
-        PrankTheme(
-            getString(R.string.theme_birthday_name),
+        MoodTemplate(
+            getString(R.string.mood_birthday_name),
             "🎂",
-            getString(R.string.theme_birthday_title),
-            getString(R.string.theme_birthday_question),
-            getString(R.string.theme_birthday_yes),
-            getString(R.string.theme_birthday_no),
-            getString(R.string.theme_birthday_final),
+            getString(R.string.mood_birthday_title),
+            getString(R.string.mood_birthday_question),
+            getString(R.string.mood_birthday_yes),
+            getString(R.string.mood_birthday_no),
+            getString(R.string.mood_birthday_final),
             "#EC4899",
             "#F97316",
             "#DB2777",
@@ -195,33 +144,135 @@ class MainActivity : ComponentActivity() {
             listOf("🎂", "🎉", "🎁", "🥳", "✨"),
             "🎉"
         ),
-        PrankTheme(
-            getString(R.string.theme_work_name),
-            "💼",
-            getString(R.string.theme_work_title),
-            getString(R.string.theme_work_question),
-            getString(R.string.theme_work_yes),
-            getString(R.string.theme_work_no),
-            getString(R.string.theme_work_final),
+        MoodTemplate(
+            getString(R.string.mood_thanks_name),
+            "🙏",
+            getString(R.string.mood_thanks_title),
+            getString(R.string.mood_thanks_question),
+            getString(R.string.mood_thanks_yes),
+            getString(R.string.mood_thanks_no),
+            getString(R.string.mood_thanks_final),
+            "#14B8A6",
+            "#22C55E",
+            "#0F766E",
+            "#14b8a6",
+            "#22c55e",
+            "#0f766e",
+            listOf("🙏", "💛", "✨", "🌟", "💐"),
+            "🙏"
+        ),
+        MoodTemplate(
+            getString(R.string.mood_comfort_name),
+            "🤗",
+            getString(R.string.mood_comfort_title),
+            getString(R.string.mood_comfort_question),
+            getString(R.string.mood_comfort_yes),
+            getString(R.string.mood_comfort_no),
+            getString(R.string.mood_comfort_final),
+            "#60A5FA",
+            "#A78BFA",
+            "#2563EB",
+            "#60a5fa",
+            "#a78bfa",
+            "#2563eb",
+            listOf("🤗", "💙", "☁️", "✨", "🌙"),
+            "🤗"
+        ),
+        MoodTemplate(
+            getString(R.string.mood_sorry_name),
+            "😢",
+            getString(R.string.mood_sorry_title),
+            getString(R.string.mood_sorry_question),
+            getString(R.string.mood_sorry_yes),
+            getString(R.string.mood_sorry_no),
+            getString(R.string.mood_sorry_final),
+            "#94A3B8",
+            "#38BDF8",
             "#64748B",
-            "#0EA5E9",
-            "#475569",
+            "#94a3b8",
+            "#38bdf8",
             "#64748b",
-            "#0ea5e9",
-            "#475569",
-            listOf("📧", "💼", "☕", "📎", "🗓️"),
-            "📧"
+            listOf("😢", "🤍", "🌧️", "🕊️", "✨"),
+            "🤍"
+        ),
+        MoodTemplate(
+            getString(R.string.mood_motivate_name),
+            "🔥",
+            getString(R.string.mood_motivate_title),
+            getString(R.string.mood_motivate_question),
+            getString(R.string.mood_motivate_yes),
+            getString(R.string.mood_motivate_no),
+            getString(R.string.mood_motivate_final),
+            "#EF4444",
+            "#F59E0B",
+            "#DC2626",
+            "#ef4444",
+            "#f59e0b",
+            "#dc2626",
+            listOf("🔥", "⚡", "🏆", "💪", "🚀"),
+            "🔥"
+        ),
+        MoodTemplate(
+            getString(R.string.mood_surprise_name),
+            "🎁",
+            getString(R.string.mood_surprise_title),
+            getString(R.string.mood_surprise_question),
+            getString(R.string.mood_surprise_yes),
+            getString(R.string.mood_surprise_no),
+            getString(R.string.mood_surprise_final),
+            "#8B5CF6",
+            "#EC4899",
+            "#7C3AED",
+            "#8b5cf6",
+            "#ec4899",
+            "#7c3aed",
+            listOf("🎁", "✨", "🎉", "💫", "😮"),
+            "🎁"
+        ),
+        MoodTemplate(
+            getString(R.string.mood_declaration_name),
+            "💌",
+            getString(R.string.mood_declaration_title),
+            getString(R.string.mood_declaration_question),
+            getString(R.string.mood_declaration_yes),
+            getString(R.string.mood_declaration_no),
+            getString(R.string.mood_declaration_final),
+            "#F472B6",
+            "#8B5CF6",
+            "#DB2777",
+            "#f472b6",
+            "#8b5cf6",
+            "#db2777",
+            listOf("💌", "❤️", "🌹", "✨", "💫"),
+            "💌"
+        ),
+        MoodTemplate(
+            getString(R.string.mood_prank_name),
+            "😈",
+            getString(R.string.mood_prank_title),
+            getString(R.string.mood_prank_question),
+            getString(R.string.mood_prank_yes),
+            getString(R.string.mood_prank_no),
+            getString(R.string.mood_prank_final),
+            "#7C3AED",
+            "#111827",
+            "#A855F7",
+            "#7c3aed",
+            "#111827",
+            "#a855f7",
+            listOf("😈", "😂", "💥", "🌀", "🎭"),
+            "😈"
         )
     )
 
 
     private fun shouldShowTutorial(): Boolean {
-        val prefs = getSharedPreferences("prank_button_prefs", Context.MODE_PRIVATE)
+        val prefs = getSharedPreferences("moodpop_prefs", Context.MODE_PRIVATE)
         return prefs.getBoolean("show_tutorial_first_launch", true)
     }
 
     private fun markTutorialAsSeen() {
-        val prefs = getSharedPreferences("prank_button_prefs", Context.MODE_PRIVATE)
+        val prefs = getSharedPreferences("moodpop_prefs", Context.MODE_PRIVATE)
         prefs.edit().putBoolean("show_tutorial_first_launch", false).apply()
     }
 
@@ -293,7 +344,7 @@ class MainActivity : ComponentActivity() {
             setPadding(dp(16), dp(16), dp(16), dp(16))
             setOnClickListener {
                 markTutorialAsSeen()
-                showThemeSelection()
+                showMoodSelection()
             }
         }
 
@@ -306,7 +357,7 @@ class MainActivity : ComponentActivity() {
             setPadding(dp(14), dp(12), dp(14), dp(12))
             setOnClickListener {
                 markTutorialAsSeen()
-                showThemeSelection()
+                showMoodSelection()
             }
         }
 
@@ -321,32 +372,7 @@ class MainActivity : ComponentActivity() {
         setContentView(scrollView)
     }
 
-    private fun sharePrankButtonApp() {
-        val packageName = packageName
-
-        val playStoreLink = "https://play.google.com/store/apps/details?id=$packageName"
-
-        val shareText = """
-${getString(R.string.share_prank_button_text)}
-
-$playStoreLink
-    """.trimIndent()
-
-        val shareIntent = Intent(Intent.ACTION_SEND).apply {
-            type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, shareText)
-        }
-
-        startActivity(
-            Intent.createChooser(
-                shareIntent,
-                getString(R.string.share_app_chooser_title)
-            )
-        )
-    }
-
-
-    private fun showThemeSelection() {
+    private fun showMoodSelection() {
         selectedImageUri = null
 
         val scrollView = ScrollView(this)
@@ -384,7 +410,7 @@ $playStoreLink
         topCard.addView(subtitle)
         layout.addView(topCard, matchWrapWithBottomMargin(dp(20)))
 
-        getThemes().forEach { theme ->
+        getMoodTemplates().forEach { theme ->
             val button = Button(this).apply {
                 text = "${theme.emoji}  ${theme.name}"
                 textSize = 20f
@@ -399,29 +425,13 @@ $playStoreLink
             }
 
             layout.addView(button, matchWrapWithBottomMargin(dp(14)))
-
         }
-        val shareAppButton = Button(this).apply {
-            text = getString(R.string.share_prank_button)
-            textSize = 18f
-            setTextColor(Color.WHITE)
-            typeface = Typeface.DEFAULT_BOLD
-            background = roundedButtonDrawable("#16A34A")
-            setPadding(dp(18), dp(15), dp(18), dp(15))
-            isAllCaps = false
-            setOnClickListener {
-                sharePrankButtonApp()
-            }
-        }
-
-        layout.addView(shareAppButton, matchWrapWithBottomMargin(dp(18)))
-
 
         scrollView.addView(layout)
         setContentView(scrollView)
     }
 
-    private fun showCreationScreen(theme: PrankTheme) {
+    private fun showCreationScreen(theme: MoodTemplate) {
         creationScreenOpenCount++
 
         if (creationScreenOpenCount >= 2) {
@@ -450,7 +460,7 @@ $playStoreLink
             background = roundedButtonDrawable("#374151")
             isAllCaps = false
             setOnClickListener {
-                showThemeSelection()
+                showMoodSelection()
             }
         }
 
@@ -564,7 +574,7 @@ $playStoreLink
     }
 
     private fun createAndShareHtml(
-        theme: PrankTheme,
+        theme: MoodTemplate,
         title: String,
         question: String,
         yesText: String,
@@ -588,7 +598,7 @@ $playStoreLink
                 imageBase64 = imageBase64
             )
 
-            val outputFile = File(cacheDir, "prank_button.html")
+            val outputFile = File(cacheDir, "moodpop.html")
             outputFile.writeText(html, Charsets.UTF_8)
 
             val uri = FileProvider.getUriForFile(
@@ -630,7 +640,7 @@ $playStoreLink
     }
 
     private fun generateHtml(
-        theme: PrankTheme,
+        theme: MoodTemplate,
         title: String,
         question: String,
         yesText: String,
@@ -662,7 +672,7 @@ $playStoreLink
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prank Button 😄</title>
+  <title>MoodPop 💫</title>
   <style>
     * { box-sizing: border-box; }
 

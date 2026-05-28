@@ -123,8 +123,8 @@
     <integer name="google_play_services_version">12451000</integer>
     <integer name="status_bar_notification_info_maxnum">999</integer>
     <string name="androidx_startup" translatable="false">androidx.startup</string>
-    <string name="app_name">Prank Button</string>
-    <string name="app_title">Prank Button 😄</string>
+    <string name="app_name">MoodPop</string>
+    <string name="app_title">MoodPop 💫</string>
     <string name="call_notification_answer_action">Answer</string>
     <string name="call_notification_answer_video_action">Video</string>
     <string name="call_notification_decline_action">Decline</string>
@@ -134,7 +134,7 @@
     <string name="call_notification_screening_text">Screening an incoming call</string>
     <string name="change_theme">← Changer de thème</string>
     <string name="choose_photo">Choisir une photo 📸</string>
-    <string name="choose_theme">Choisis un thème pour créer ta page piège</string>
+    <string name="choose_theme">Que veux-tu envoyer aujourd’hui ?</string>
     <string msgid="2523291102206661146" name="common_google_play_services_enable_button">Enable</string>
     <string msgid="227660514972886228" name="common_google_play_services_enable_text"><ns1:g id="app_name">%1$s</ns1:g> won\'t work unless you enable Google Play services.</string>
     <string msgid="5122002158466380389" name="common_google_play_services_enable_title">Enable Google Play services</string>
@@ -156,69 +156,87 @@
     <string name="create_send_whatsapp">Créer et envoyer sur WhatsApp 🚀</string>
     <string name="edit_instruction">Personnalise les textes, choisis une photo, puis envoie la surprise.</string>
     <string name="error_prefix">Erreur : </string>
-    <string name="field_escaping_button">Bouton qui fuit</string>
+    <string name="field_escaping_button">Bouton secondaire</string>
     <string name="field_final_message">Message final</string>
-    <string name="field_positive_button">Bouton positif</string>
+    <string name="field_positive_button">Bouton principal</string>
     <string name="field_question">Question</string>
     <string name="field_title">Titre</string>
+    <string name="mood_birthday_final">Joyeux anniversaire ! Que ta journée soit magique 🎉</string>
+    <string name="mood_birthday_name">Souhaiter un anniversaire</string>
+    <string name="mood_birthday_no">Pas encore</string>
+    <string name="mood_birthday_question">Tu veux ouvrir ta surprise ?</string>
+    <string name="mood_birthday_title">Joyeux anniversaire 🎂</string>
+    <string name="mood_birthday_yes">Ouvrir 🎁</string>
+    <string name="mood_comfort_final">Je pense à toi. Tu n’es pas seul ou seule 🤗</string>
+    <string name="mood_comfort_name">Réconforter</string>
+    <string name="mood_comfort_no">Pas maintenant</string>
+    <string name="mood_comfort_question">Tu veux recevoir un peu de douceur ?</string>
+    <string name="mood_comfort_title">Un petit câlin virtuel 🤗</string>
+    <string name="mood_comfort_yes">Oui 🤗</string>
+    <string name="mood_declaration_final">Voilà ce que je voulais te dire : tu es important pour moi 💌</string>
+    <string name="mood_declaration_name">Faire une déclaration</string>
+    <string name="mood_declaration_no">Plus tard</string>
+    <string name="mood_declaration_question">Tu veux lire mon message ?</string>
+    <string name="mood_declaration_title">J’ai quelque chose à te dire 💌</string>
+    <string name="mood_declaration_yes">Oui 💌</string>
+    <string name="mood_laugh_final">Mission réussie : sourire obligatoire 😂</string>
+    <string name="mood_laugh_name">Faire rire</string>
+    <string name="mood_laugh_no">Même pas 😐</string>
+    <string name="mood_laugh_question">Tu es prêt à rigoler ?</string>
+    <string name="mood_laugh_title">J’ai une question très sérieuse 😂</string>
+    <string name="mood_laugh_yes">Oui 😂</string>
+    <string name="mood_love_final">Je t’aime fort, vraiment ❤️</string>
+    <string name="mood_love_name">Dire je t’aime</string>
+    <string name="mood_love_no">Pas sûr 😢</string>
+    <string name="mood_love_question">Tu sais que je t’aime ?</string>
+    <string name="mood_love_title">Juste pour toi ❤️</string>
+    <string name="mood_love_yes">Oui 💖</string>
+    <string name="mood_motivate_final">Tu es capable de grandes choses. Ne lâche rien 🔥</string>
+    <string name="mood_motivate_name">Motiver</string>
+    <string name="mood_motivate_no">Pas là</string>
+    <string name="mood_motivate_question">Tu veux un boost d’énergie ?</string>
+    <string name="mood_motivate_title">Tu vas y arriver 🔥</string>
+    <string name="mood_motivate_yes">Go 🔥</string>
+    <string name="mood_prank_final">Trop facile ! Tu t’es fait piéger 😈</string>
+    <string name="mood_prank_name">Faire un prank</string>
+    <string name="mood_prank_no">Mauvaise réponse 😈</string>
+    <string name="mood_prank_question">Tu penses pouvoir cliquer sur la mauvaise réponse ?</string>
+    <string name="mood_prank_title">Question piège 😈</string>
+    <string name="mood_prank_yes">Bonne réponse 😄</string>
+    <string name="mood_sorry_final">Je suis sincèrement désolé. Tu comptes beaucoup pour moi 🤍</string>
+    <string name="mood_sorry_name">S’excuser</string>
+    <string name="mood_sorry_no">Je boude encore</string>
+    <string name="mood_sorry_question">Tu acceptes de lire mon message ?</string>
+    <string name="mood_sorry_title">Je suis désolé 😢</string>
+    <string name="mood_sorry_yes">Oui 🤍</string>
+    <string name="mood_surprise_final">Surprise ! J’espère que ça va te faire sourire 🎁</string>
+    <string name="mood_surprise_name">Annoncer une surprise</string>
+    <string name="mood_surprise_no">Non</string>
+    <string name="mood_surprise_question">Tu veux la découvrir ?</string>
+    <string name="mood_surprise_title">J’ai une surprise 🎁</string>
+    <string name="mood_surprise_yes">Oui 🎁</string>
+    <string name="mood_thanks_final">Merci pour tout. Tu comptes beaucoup pour moi 🙏</string>
+    <string name="mood_thanks_name">Dire merci</string>
+    <string name="mood_thanks_no">Plus tard</string>
+    <string name="mood_thanks_question">Tu sais à quel point je suis reconnaissant ?</string>
+    <string name="mood_thanks_title">Un grand merci 🙏</string>
+    <string name="mood_thanks_yes">Découvrir 🙏</string>
     <string name="no_image_selected">Aucune photo sélectionnée</string>
     <string name="no_photo">Choisis d’abord une photo 😉</string>
     <string name="selected_photo">Photo sélectionnée</string>
     <string name="share_app_chooser_title">Partager avec</string>
-    <string name="share_prank_button">Partager Prank Button 😄</string>
-    <string name="share_prank_button_text">Découvre Prank Button 😄 Une appli pour créer des pages pièges rigolotes à envoyer sur WhatsApp !</string>
+    <string name="share_prank_button">Partager MoodPop 💫</string>
+    <string name="share_prank_button_text">Découvre MoodPop 💫 Une app pour créer de petites surprises interactives et partager de grandes émotions !</string>
     <string name="status_bar_notification_info_overflow">999+</string>
-    <string name="theme_birthday_final">Trop tard, la surprise arrive 🎉🎂</string>
-    <string name="theme_birthday_name">Anniversaire</string>
-    <string name="theme_birthday_no">Non 😭</string>
-    <string name="theme_birthday_question">Tu veux ton cadeau maintenant ?</string>
-    <string name="theme_birthday_title">Surprise 🎂</string>
-    <string name="theme_birthday_yes">Oui 🎁</string>
-    <string name="theme_drinks_final">Bonne réponse 😄 Santé ! 🍻</string>
-    <string name="theme_drinks_name">Apéro</string>
-    <string name="theme_drinks_no">Non 😱</string>
-    <string name="theme_drinks_question">Est-ce l’heure de l’apéro ?</string>
-    <string name="theme_drinks_title">Question importante 🍻</string>
-    <string name="theme_drinks_yes">Oui 🍻</string>
-    <string name="theme_family_final">Je savais que tu dirais la vérité 😄</string>
-    <string name="theme_family_name">Famille</string>
-    <string name="theme_family_no">Pas toi 😅</string>
-    <string name="theme_family_question">Qui est le plus drôle de la famille ?</string>
-    <string name="theme_family_title">Question familiale 👨‍👩‍👧‍👦</string>
-    <string name="theme_family_yes">Toi 😄</string>
-    <string name="theme_fan_final">Voilà, enfin quelqu’un de lucide 😄⚽</string>
-    <string name="theme_fan_name">Fan</string>
-    <string name="theme_fan_no">L’autre 😬</string>
-    <string name="theme_fan_question">Quelle est la meilleure équipe ?</string>
-    <string name="theme_fan_title">Question de supporter ⚽</string>
-    <string name="theme_fan_yes">La mienne 🔥</string>
-    <string name="theme_friends_final">Merci, c’est noté officiellement 😎</string>
-    <string name="theme_friends_name">Amis</string>
-    <string name="theme_friends_no">Jamais 😂</string>
-    <string name="theme_friends_question">Tu reconnais que je suis le plus fort ?</string>
-    <string name="theme_friends_title">Question entre amis 😎</string>
-    <string name="theme_friends_yes">Oui 😎</string>
-    <string name="theme_love_final">Je le savais 😍 Moi aussi je t’aime fort ❤️</string>
-    <string name="theme_love_name">Amour</string>
-    <string name="theme_love_no">Non 😢</string>
-    <string name="theme_love_question">Est-ce que tu m’aimes ?</string>
-    <string name="theme_love_title">Ma chérie ❤️</string>
-    <string name="theme_love_yes">Oui 💖</string>
-    <string name="theme_work_final">Enfin quelqu’un de raisonnable 😄📧</string>
-    <string name="theme_work_name">Travail</string>
-    <string name="theme_work_no">Non 💼</string>
-    <string name="theme_work_question">Est-ce que cette réunion aurait pu être un email ?</string>
-    <string name="theme_work_title">Question professionnelle 💼</string>
-    <string name="theme_work_yes">Oui 📧</string>
     <string name="tutorial_skip">Passer</string>
     <string name="tutorial_start">C’est parti 🚀</string>
-    <string name="tutorial_step_0">0) Choisis ton thème de prank</string>
-    <string name="tutorial_step_1">1) Modifie les textes</string>
-    <string name="tutorial_step_2">2) Crée-le avec une photo</string>
-    <string name="tutorial_step_3">3) Envoie-le à tes amis</string>
-    <string name="tutorial_step_4">4) Rigole bien ! 😂</string>
+    <string name="tutorial_step_0">0) Choisis l’émotion à envoyer</string>
+    <string name="tutorial_step_1">1) Personnalise les textes</string>
+    <string name="tutorial_step_2">2) Ajoute une photo</string>
+    <string name="tutorial_step_3">3) Envoie à quelqu’un que tu aimes</string>
+    <string name="tutorial_step_4">4) Partage une émotion ! 💫</string>
     <string name="tutorial_title">Comment ça marche ? 😄</string>
-    <string name="whatsapp_not_installed">WhatsApp n\'est pas installé 😢</string>
+    <string name="whatsapp_not_installed">WhatsApp n est pas installé 😢</string>
     <style name="AppTheme" parent="android:style/Theme.Material.Light.NoActionBar">
         <item name="android:fontFamily">sans</item>
         <item name="android:windowLightStatusBar">false</item>
@@ -274,14 +292,23 @@
         <attr format="reference" name="fontProviderCerts"/>
         
         <attr name="fontProviderFetchStrategy">
-            
+            <!-- The blocking font fetch works as follows.
+              First, check the local cache, then if the requested font is not cached, request the
+              font from the provider and wait until it is finished.  You can change the length of
+              the timeout by modifying fontProviderFetchTimeout.  If the timeout happens, the
+              default typeface will be used instead. -->
             <enum name="blocking" value="0"/>
-            
+            <!-- The async font fetch works as follows.
+              First, check the local cache, then if the requeted font is not cached, trigger a
+              request the font and continue with layout inflation. Once the font fetch succeeds, the
+              target text view will be refreshed with the downloaded font data. The
+              fontProviderFetchTimeout will be ignored if async loading is specified. -->
             <enum name="async" value="1"/>
         </attr>
         
         <attr format="integer" name="fontProviderFetchTimeout">
-            
+            <!-- A special value for the timeout. In this case, the blocking font fetching will not
+              timeout and wait until a reply is received from the font provider. -->
             <enum name="forever" value="-1"/>
         </attr>
         
