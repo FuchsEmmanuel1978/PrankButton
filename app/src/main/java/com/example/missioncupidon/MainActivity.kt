@@ -169,6 +169,7 @@ class MainActivity : ComponentActivity() {
         setContentView(scrollView)
     }
 
+
     private fun showCategorySelection() {
         selectedImageUri = null
         val scrollView = ScrollView(this)
@@ -176,19 +177,19 @@ class MainActivity : ComponentActivity() {
 
         val layout = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dp(20), dp(32), dp(20), dp(24))
+            setPadding(dp(16), dp(24), dp(16), dp(20))
         }
 
         val topCard = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             gravity = Gravity.CENTER_HORIZONTAL
             background = cardDrawable()
-            setPadding(dp(20), dp(24), dp(20), dp(24))
+            setPadding(dp(18), dp(18), dp(18), dp(18))
         }
 
         topCard.addView(TextView(this).apply {
             text = getString(R.string.app_title)
-            textSize = 30f
+            textSize = 28f
             setTextColor(Color.WHITE)
             typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
@@ -196,31 +197,37 @@ class MainActivity : ComponentActivity() {
 
         topCard.addView(TextView(this).apply {
             text = "Que veux-tu envoyer aujourd’hui ?"
-            textSize = 16f
+            textSize = 15f
             setTextColor(Color.parseColor("#FCE7F3"))
             gravity = Gravity.CENTER
-            setPadding(0, dp(8), 0, dp(4))
+            setPadding(0, dp(6), 0, 0)
         })
 
-        layout.addView(topCard, matchWrapWithBottomMargin(dp(20)))
+        layout.addView(topCard, matchWrapWithBottomMargin(dp(16)))
 
-        MessageCategoryCatalog.all().forEach { category ->
-            val button = Button(this).apply {
-                text = "${category.emoji}  ${category.name}"
-                textSize = 20f
-                setTextColor(Color.WHITE)
-                typeface = Typeface.DEFAULT_BOLD
-                background = roundedButtonDrawable(category.colors.accent)
-                setPadding(dp(18), dp(16), dp(18), dp(16))
-                isAllCaps = false
-                setOnClickListener { showInteractionSelection(category) }
-            }
-            layout.addView(button, matchWrapWithBottomMargin(dp(14)))
+        val grid = GridLayout(this).apply {
+            columnCount = 2
+            useDefaultMargins = false
+            alignmentMode = GridLayout.ALIGN_BOUNDS
         }
 
+        MessageCategoryCatalog.all().forEach { category ->
+            grid.addView(
+                createCompactTile(
+                    emoji = category.emoji,
+                    title = category.name,
+                    subtitle = null,
+                    color = category.colors.accent
+                ) { showInteractionSelection(category) },
+                gridParams()
+            )
+        }
+
+        layout.addView(grid)
         scrollView.addView(layout)
         setContentView(scrollView)
     }
+
 
     private fun showInteractionSelection(category: MessageCategory) {
         val scrollView = ScrollView(this)
@@ -228,19 +235,19 @@ class MainActivity : ComponentActivity() {
 
         val layout = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dp(20), dp(28), dp(20), dp(24))
+            setPadding(dp(16), dp(22), dp(16), dp(20))
         }
 
         val headerCard = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             gravity = Gravity.CENTER_HORIZONTAL
             background = cardDrawable()
-            setPadding(dp(20), dp(22), dp(20), dp(22))
+            setPadding(dp(18), dp(18), dp(18), dp(18))
         }
 
         val backButton = Button(this).apply {
             text = "← Changer d’émotion"
-            textSize = 15f
+            textSize = 14f
             setTextColor(Color.WHITE)
             background = roundedButtonDrawable("#374151")
             isAllCaps = false
@@ -250,39 +257,60 @@ class MainActivity : ComponentActivity() {
         headerCard.addView(backButton)
         headerCard.addView(TextView(this).apply {
             text = "${category.emoji} ${category.name}"
-            textSize = 28f
+            textSize = 25f
             setTextColor(Color.WHITE)
             typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
-            setPadding(0, dp(16), 0, dp(8))
+            setPadding(0, dp(12), 0, dp(6))
         })
         headerCard.addView(TextView(this).apply {
             text = "Comment veux-tu révéler ton message ?"
-            textSize = 16f
+            textSize = 15f
             setTextColor(Color.parseColor("#F9FAFB"))
             gravity = Gravity.CENTER
         })
-        layout.addView(headerCard, matchWrapWithBottomMargin(dp(18)))
+        layout.addView(headerCard, matchWrapWithBottomMargin(dp(16)))
 
-        InteractionTypeCatalog.recommendedFor(category).forEachIndexed { index, interaction ->
-            if (index == 0) layout.addView(sectionTitle("Recommandés pour ${category.emoji} ${category.name}"))
-            if (index == category.recommendedInteractionIds.size) layout.addView(sectionTitle("Autres formats"))
-            val button = Button(this).apply {
-                text = "${interaction.emoji}  ${interaction.name}\n${interaction.description}"
-                textSize = 16f
-                setTextColor(Color.WHITE)
-                typeface = Typeface.DEFAULT_BOLD
-                background = roundedButtonDrawable(category.colors.accent)
-                setPadding(dp(18), dp(16), dp(18), dp(16))
-                isAllCaps = false
-                setOnClickListener { showCreationScreen(category, interaction) }
-            }
-            layout.addView(button, matchWrapWithBottomMargin(dp(14)))
-        }
+        val interactions = InteractionTypeCatalog.recommendedFor(category)
+        val recommendedIds = category.recommendedInteractionIds.toSet()
+        val recommended = interactions.filter { recommendedIds.contains(it.id) }
+        val others = interactions.filterNot { recommendedIds.contains(it.id) }
+
+        layout.addView(sectionTitle("Recommandés"))
+        layout.addView(interactionGrid(category, recommended), matchWrapWithBottomMargin(dp(10)))
+
+        layout.addView(sectionTitle("Autres formats"))
+        layout.addView(interactionGrid(category, others))
 
         scrollView.addView(layout)
         setContentView(scrollView)
     }
+
+
+    private fun interactionGrid(
+        category: MessageCategory,
+        interactions: List<InteractionType>
+    ): GridLayout {
+        return GridLayout(this).apply {
+            columnCount = 2
+            useDefaultMargins = false
+            alignmentMode = GridLayout.ALIGN_BOUNDS
+
+            interactions.forEach { interaction ->
+                addView(
+                    createCompactTile(
+                        emoji = interaction.emoji,
+                        title = interaction.name,
+                        subtitle = interaction.description,
+                        color = category.colors.accent
+                    ) { showCreationScreen(category, interaction) },
+                    gridParams()
+                )
+            }
+        }
+    }
+
+
 
     private fun showCreationScreen(category: MessageCategory, interaction: InteractionType) {
         creationScreenOpenCount++
@@ -295,42 +323,36 @@ class MainActivity : ComponentActivity() {
         scrollView.background = gradientDrawable(category.colors.appStart, category.colors.appEnd)
         val layout = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dp(18), dp(24), dp(18), dp(24))
+            setPadding(dp(14), dp(18), dp(14), dp(18))
         }
 
         val headerCard = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             background = cardDrawable()
-            setPadding(dp(20), dp(20), dp(20), dp(20))
+            setPadding(dp(16), dp(16), dp(16), dp(16))
         }
 
         headerCard.addView(Button(this).apply {
             text = "← Changer de format"
             setTextColor(Color.WHITE)
-            textSize = 16f
+            textSize = 14f
             background = roundedButtonDrawable("#374151")
             isAllCaps = false
             setOnClickListener { showInteractionSelection(category) }
         })
         headerCard.addView(TextView(this).apply {
             text = "${category.emoji} ${category.name} + ${interaction.emoji} ${interaction.name}"
-            textSize = 24f
+            textSize = 21f
             setTextColor(Color.WHITE)
             typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
-            setPadding(0, dp(16), 0, dp(8))
-        })
-        headerCard.addView(TextView(this).apply {
-            text = getString(R.string.edit_instruction)
-            textSize = 15f
-            setTextColor(Color.parseColor("#F9FAFB"))
-            gravity = Gravity.CENTER
+            setPadding(0, dp(12), 0, dp(4))
         })
 
         val formCard = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             background = cardDrawable()
-            setPadding(dp(18), dp(18), dp(18), dp(18))
+            setPadding(dp(14), dp(14), dp(14), dp(14))
         }
 
         val defaults = category.defaults
@@ -342,68 +364,130 @@ class MainActivity : ComponentActivity() {
 
         imagePreview = ImageView(this).apply {
             adjustViewBounds = true
-            minimumHeight = dp(180)
+            minimumHeight = dp(230)
+            maxHeight = dp(430)
             scaleType = ImageView.ScaleType.CENTER_CROP
             background = imageFrameDrawable()
             setImageResource(android.R.drawable.ic_menu_gallery)
             setPadding(dp(8), dp(8), dp(8), dp(8))
+            setOnClickListener { openPhotoPicker() }
         }
 
+        val photoHint = TextView(this).apply {
+            text = "Touchez la zone photo pour choisir ou changer l’image"
+            textSize = 13f
+            setTextColor(Color.parseColor("#374151"))
+            gravity = Gravity.CENTER
+            setPadding(0, 0, 0, dp(8))
+        }
+
+        formCard.addView(label(getString(R.string.selected_photo)))
+        formCard.addView(photoHint)
+        formCard.addView(imagePreview, matchWrapWithBottomMargin(dp(10)))
+
         formCard.addView(label(getString(R.string.field_title)))
-        formCard.addView(titleInput, matchWrapWithBottomMargin(dp(12)))
+        formCard.addView(titleInput, matchWrapWithBottomMargin(dp(8)))
         formCard.addView(label(getString(R.string.field_question)))
-        formCard.addView(questionInput, matchWrapWithBottomMargin(dp(12)))
+        formCard.addView(questionInput, matchWrapWithBottomMargin(dp(8)))
         formCard.addView(label(getString(R.string.field_positive_button)))
-        formCard.addView(primaryInput, matchWrapWithBottomMargin(dp(12)))
+        formCard.addView(primaryInput, matchWrapWithBottomMargin(dp(8)))
         if (interaction.needsSecondaryButton) {
             formCard.addView(label(getString(R.string.field_escaping_button)))
-            formCard.addView(secondaryInput, matchWrapWithBottomMargin(dp(12)))
+            formCard.addView(secondaryInput, matchWrapWithBottomMargin(dp(8)))
         }
         formCard.addView(label(getString(R.string.field_final_message)))
-        formCard.addView(finalMessageInput, matchWrapWithBottomMargin(dp(16)))
-        formCard.addView(label(getString(R.string.selected_photo)))
-        formCard.addView(imagePreview, matchWrapWithBottomMargin(dp(14)))
-        formCard.addView(Button(this).apply {
-            text = getString(R.string.choose_photo)
+        formCard.addView(finalMessageInput, matchWrapWithBottomMargin(dp(12)))
+
+        val previewButton = Button(this).apply {
+            text = "Aperçu 👀"
             setTextColor(Color.WHITE)
             textSize = 17f
             typeface = Typeface.DEFAULT_BOLD
-            background = roundedButtonDrawable(category.colors.accent)
-            setPadding(dp(16), dp(14), dp(16), dp(14))
+            background = roundedButtonDrawable("#2563EB")
+            setPadding(dp(18), dp(14), dp(18), dp(14))
             isAllCaps = false
             setOnClickListener {
-                pickImageLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                previewHtml(buildGeneratedExperience(category, interaction, titleInput, questionInput, primaryInput, secondaryInput, finalMessageInput, ""))
             }
-        }, matchWrapWithBottomMargin(dp(14)))
-        formCard.addView(Button(this).apply {
+        }
+
+        val sendButton = Button(this).apply {
             text = getString(R.string.create_send_whatsapp)
             setTextColor(Color.WHITE)
-            textSize = 18f
+            textSize = 17f
             typeface = Typeface.DEFAULT_BOLD
             background = roundedButtonDrawable("#16A34A")
-            setPadding(dp(18), dp(16), dp(18), dp(16))
+            setPadding(dp(18), dp(14), dp(18), dp(14))
             isAllCaps = false
             setOnClickListener {
-                createAndShareHtml(
-                    GeneratedExperience(
-                        category = category,
-                        interaction = interaction,
-                        title = titleInput.text.toString().ifBlank { defaults.title },
-                        question = questionInput.text.toString().ifBlank { defaults.question },
-                        primaryButton = primaryInput.text.toString().ifBlank { defaults.primaryButton },
-                        secondaryButton = secondaryInput.text.toString().ifBlank { defaults.secondaryButton },
-                        finalMessage = finalMessageInput.text.toString().ifBlank { defaults.finalMessage },
-                        imageBase64 = ""
-                    )
-                )
+                createAndShareHtml(buildGeneratedExperience(category, interaction, titleInput, questionInput, primaryInput, secondaryInput, finalMessageInput, ""))
             }
-        })
+        }
 
-        layout.addView(headerCard, matchWrapWithBottomMargin(dp(18)))
+        val actionRow = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            weightSum = 2f
+        }
+        actionRow.addView(previewButton, rowButtonParams(dp(6), dp(0)))
+        actionRow.addView(sendButton, rowButtonParams(dp(0), dp(6)))
+        formCard.addView(actionRow)
+
+        layout.addView(headerCard, matchWrapWithBottomMargin(dp(12)))
         layout.addView(formCard)
         scrollView.addView(layout)
         setContentView(scrollView)
     }
+
+
+    private fun openPhotoPicker() {
+        pickImageLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    }
+
+    private fun buildGeneratedExperience(
+        category: MessageCategory,
+        interaction: InteractionType,
+        titleInput: EditText,
+        questionInput: EditText,
+        primaryInput: EditText,
+        secondaryInput: EditText,
+        finalMessageInput: EditText,
+        imageBase64: String
+    ): GeneratedExperience {
+        val defaults = category.defaults
+        return GeneratedExperience(
+            category = category,
+            interaction = interaction,
+            title = titleInput.text.toString().ifBlank { defaults.title },
+            question = questionInput.text.toString().ifBlank { defaults.question },
+            primaryButton = primaryInput.text.toString().ifBlank { defaults.primaryButton },
+            secondaryButton = secondaryInput.text.toString().ifBlank { defaults.secondaryButton },
+            finalMessage = finalMessageInput.text.toString().ifBlank { defaults.finalMessage },
+            imageBase64 = imageBase64
+        )
+    }
+
+    private fun previewHtml(experienceWithoutImage: GeneratedExperience) {
+        try {
+            if (selectedImageUri == null) {
+                Toast.makeText(this, getString(R.string.no_photo), Toast.LENGTH_LONG).show()
+                return
+            }
+            val imageBase64 = convertImageToBase64(selectedImageUri!!)
+            val experience = experienceWithoutImage.copy(imageBase64 = imageBase64)
+            val html = GeneratedExperienceHtmlGenerator.generate(experience)
+            val outputFile = File(cacheDir, "moodpop_preview.html")
+            outputFile.writeText(html, Charsets.UTF_8)
+            val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", outputFile)
+            val previewIntent = Intent(Intent.ACTION_VIEW).apply {
+                setDataAndType(uri, "text/html")
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            startActivity(Intent.createChooser(previewIntent, "Ouvrir l’aperçu avec"))
+        } catch (e: Exception) {
+            Toast.makeText(this, getString(R.string.error_prefix) + (e.message ?: ""), Toast.LENGTH_LONG).show()
+        }
+    }
+
 
     private fun createAndShareHtml(experienceWithoutImage: GeneratedExperience) {
         try {
@@ -441,24 +525,71 @@ class MainActivity : ComponentActivity() {
         return Base64.encodeToString(imageBytes, Base64.NO_WRAP)
     }
 
+
+    private fun createCompactTile(
+        emoji: String,
+        title: String,
+        subtitle: String?,
+        color: String,
+        onClick: () -> Unit
+    ): LinearLayout {
+        return LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER
+            background = roundedButtonDrawable(color)
+            setPadding(dp(10), dp(12), dp(10), dp(12))
+            minimumHeight = if (subtitle == null) dp(92) else dp(128)
+            isClickable = true
+            isFocusable = true
+            setOnClickListener { onClick() }
+
+            addView(TextView(this@MainActivity).apply {
+                text = emoji
+                textSize = 28f
+                gravity = Gravity.CENTER
+            })
+
+            addView(TextView(this@MainActivity).apply {
+                text = title
+                textSize = 15f
+                setTextColor(Color.WHITE)
+                typeface = Typeface.DEFAULT_BOLD
+                gravity = Gravity.CENTER
+                maxLines = 2
+            })
+
+            if (!subtitle.isNullOrBlank()) {
+                addView(TextView(this@MainActivity).apply {
+                    text = subtitle
+                    textSize = 11f
+                    setTextColor(Color.parseColor("#F9FAFB"))
+                    gravity = Gravity.CENTER
+                    maxLines = 3
+                    setPadding(0, dp(4), 0, 0)
+                })
+            }
+        }
+    }
+
+
     private fun styledEditText(hint: String, defaultText: String): EditText {
         return EditText(this).apply {
             this.hint = hint
             setText(defaultText)
             setTextColor(Color.parseColor("#111827"))
             setHintTextColor(Color.parseColor("#9CA3AF"))
-            textSize = 16f
+            textSize = 15f
             background = inputDrawable()
-            setPadding(dp(16), dp(14), dp(16), dp(14))
+            setPadding(dp(14), dp(10), dp(14), dp(10))
         }
     }
 
     private fun label(text: String): TextView = TextView(this).apply {
         this.text = text
         setTextColor(Color.parseColor("#374151"))
-        textSize = 14f
+        textSize = 13f
         typeface = Typeface.DEFAULT_BOLD
-        setPadding(0, 0, 0, dp(6))
+        setPadding(0, 0, 0, dp(4))
     }
 
     private fun sectionTitle(text: String): TextView = TextView(this).apply {
@@ -482,7 +613,7 @@ class MainActivity : ComponentActivity() {
 
     private fun inputDrawable(): GradientDrawable = GradientDrawable().apply {
         shape = GradientDrawable.RECTANGLE
-        cornerRadius = dp(16).toFloat()
+        cornerRadius = dp(14).toFloat()
         setColor(Color.WHITE)
         setStroke(dp(1), Color.parseColor("#E5E7EB"))
     }
@@ -513,6 +644,26 @@ class MainActivity : ComponentActivity() {
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         ).apply { bottomMargin = bottom }
+    }
+
+
+    private fun gridParams(): GridLayout.LayoutParams {
+        return GridLayout.LayoutParams().apply {
+            width = 0
+            height = GridLayout.LayoutParams.WRAP_CONTENT
+            columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
+            setMargins(dp(5), dp(5), dp(5), dp(5))
+        }
+    }
+
+    private fun rowButtonParams(left: Int, right: Int): LinearLayout.LayoutParams {
+        return LinearLayout.LayoutParams(
+            0,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            1f
+        ).apply {
+            setMargins(left, 0, right, 0)
+        }
     }
 
     private fun dp(value: Int): Int = TypedValue.applyDimension(
